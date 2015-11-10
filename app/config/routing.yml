@@ -1,7 +1,0 @@
-chalasdev_capistrano:
-    resource: "@ChalasdevCapistranoBundle/Resources/config/routing.yml"
-    prefix:   /
-
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
