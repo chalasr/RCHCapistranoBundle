@@ -1,0 +1,1 @@
+#chalasr/capistrano-bundle
