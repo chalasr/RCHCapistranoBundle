@@ -1,0 +1,3 @@
+chalasdev_capistrano_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: ChalasdevCapistranoBundle:Default:index }
