@@ -30,8 +30,8 @@ class SetupCommand extends ContainerAwareCommand
           $fs->remove("{$root}/../config");
       }
       $fs->mirror(
-          // $root.'/../vendor/Chalasdev/CapistranoBundle/Resources/config/capistrano', //production
-          $root.'/../src/Chalasdev/CapistranoBundle/Resources/config/capistrano', //development
+          $root.'/../vendor/Chalasdev/CapistranoBundle/Resources/config/capistrano', //production
+          // $root.'/../src/Chalasdev/CapistranoBundle/Resources/config/capistrano', //development
           $root.'/../config/'
       );
       $path = $root."/../config/";
@@ -191,9 +191,4 @@ class SetupCommand extends ContainerAwareCommand
    protected function execute(InputInterface $input, OutputInterface $output)
    {
        $fs = new Filesystem();
-       $helper = $this->getHelper('question');
-       $root = $this->getContainer()->get('kernel')->getRootDir()."/..";
-       $fs->touch("{$root}/Capfile");
-   }
-
-}
+       $hel
