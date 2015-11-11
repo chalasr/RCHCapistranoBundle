@@ -38,7 +38,7 @@ As long as your production branch is up-to-date, you can do ```cap production de
 
 ## Credits
 
-Author : [Robin Chalas](https:/git.chalasdev.fr/)
+Author : [Robin Chalas](https:/github.com/chalasr)
 
 ## License
 
