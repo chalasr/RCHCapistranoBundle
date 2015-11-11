@@ -191,4 +191,9 @@ class SetupCommand extends ContainerAwareCommand
    protected function execute(InputInterface $input, OutputInterface $output)
    {
        $fs = new Filesystem();
-       $hel
+       $helper = $this->getHelper('question');
+       $root = $this->getContainer()->get('kernel')->getRootDir()."/..";
+       $fs->touch("{$root}/Capfile");
+   }
+
+}
