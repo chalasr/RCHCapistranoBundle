@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/chalasdev/CsvParserBundle.svg?branch=master)](https://travis-ci.org/chalasdev/CsvParserBundle)
-[![SensioLabsInsight](https://insight.sensiolabs.com/projects/bed2f9ff-2ff5-484d-ac05-940d5aa226aa/mini.png)](https://insight.sensiolabs.com/projects/bed2f9ff-2ff5-484d-ac05-940d5aa226aa)
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74/mini.png)](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74)
 
 # chalasdev/capistrano-bundle
 
