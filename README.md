@@ -36,12 +36,10 @@ Run the following command to setup your deployment workflow based on [capistrano
 
 As long as your production branch is up-to-date, you can do ```cap production deploy``` each times you need, without any maintenance or perturbations.
 
- Credits
- -------
+## Credits
 
- Author : [Robin Chalas](https:/git.chalasdev.fr/)
+Author : [Robin Chalas](https:/git.chalasdev.fr/)
 
- License
- -------
+## License
 
- [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
