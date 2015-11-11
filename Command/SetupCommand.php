@@ -88,6 +88,13 @@ class SetupCommand extends ContainerAwareCommand
               "helper" => "true",
               "label" => "Set permissions"
           ],
+          "permission_method" =>  [
+              "helper" => ":chmod",
+              "label" => "Permission method",
+              "autocomplete" => [
+                  ":chmod", ":acl"
+              ],
+          ],
           "keep_releases" =>  [
               "helper" => 3,
               "label" => "Number of releases"
