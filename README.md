@@ -2,11 +2,14 @@
 
 # chalasdev/capistrano-bundle
 
-Simple CSV Import/Export Bundle with commande line/form template, and display data in markup.
+Symfony/console command that provide automation of your deployment workflow, built on top of Capistrano.
 
 ##Requirements (before install)
 
-- Symfony >= 2.7
+- Symfony/Console >= 2.7
+- Symfony/Filesystem >= 2.7
+- Ruby >= 2.0
+- Capistrano rubygems (Gemfile provided)
 
 ##Install:
 
@@ -18,7 +21,7 @@ Download the bundle using [composer](http://getcomposer.org/) :
  Credits
  -------
 
- Author : [Robin Chalas](http://www.chalasdev.fr/)
+ Author : [Robin Chalas](https:/git.chalasdev.fr/)
 
  License
  -------
