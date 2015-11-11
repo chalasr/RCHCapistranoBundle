@@ -30,7 +30,7 @@ class SetupCommand extends ContainerAwareCommand
           $fs->remove("{$root}/../config");
       }
       $fs->mirror(
-          $root.'/../vendor/Chalasdev/CapistranoBundle/Resources/config/capistrano', //production
+          $root.'/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano', //production
           // $root.'/../src/Chalasdev/CapistranoBundle/Resources/config/capistrano', //development
           $root.'/../config/'
       );
