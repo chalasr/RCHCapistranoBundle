@@ -19,5 +19,8 @@
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
     },
+    "require-dev": {
+        "phpspec/phpspec": "~2.0"
+    },
     "target-dir": "Chalasdev/CapistranoBundle"
 }
