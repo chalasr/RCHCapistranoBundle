@@ -23,9 +23,8 @@ class SetupCommand extends ContainerAwareCommand
 
    protected function execute(InputInterface $input, OutputInterface $output)
    {
-
    }
-   
+
    protected function interact(InputInterface $input, OutputInterface $output)
    {
       $fs = new Filesystem();
@@ -58,8 +57,7 @@ class SetupCommand extends ContainerAwareCommand
       $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
       $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
       $fs->mirror(
-          // "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano", //production
-          "{$root}/../src/Chalasdev/CapistranoBundle/Resources/config/capistrano", //development
+          "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano", //production
           "{$root}/../config/"
       );
       $path = $root."/../config/";
@@ -146,8 +144,6 @@ class SetupCommand extends ContainerAwareCommand
       $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
       $output->writeln(["<info>Successfully created.</info>", '']);
       $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
-
-      // Production staging
       $stagingPath = $root."/../config/deploy/production.rb";
       $currentUser = get_current_user();
       $currentOs = php_uname('s');
@@ -160,7 +156,6 @@ class SetupCommand extends ContainerAwareCommand
       $question = new Question("<info>{$serverOptions['domain']['label']}</info> [<comment>{$serverOptions['domain']['helper']}</comment>]: ", $serverOptions['domain']['helper']);
       $sshProps["domain"] = $questionHelper->ask($input, $output, $question);
       $expression = PHP_EOL."server '{$sshProps['domain']}',".PHP_EOL."user: '{$data["ssh_user"]}',".PHP_EOL;
-      // Remote Server
       $sshOptions = [
           "forward_agent" => [
               "label" => "SSH forward_agent",
