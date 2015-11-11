@@ -1,7 +1,6 @@
 {
     "name": "chalasdev/capistrano-bundle",
-    "version": "1.0.0-alpha",
-    "description": "Symony2 Bundle for Import/Export CSV files with Doctrine by command line or templating.",
+    "description": "Symfony/console command that provide automation of your deployment workflow on top of Capistrano.",
     "keywords": ["deploy", "bundle", "symfony2", "capistrano", "capifony", "production", "workflow"],
     "type": "symfony-bundle",
     "license": "GPL-3.0",
@@ -14,7 +13,8 @@
     ],
     "require": {
         "php": "> 5.4",
-        "symfony/symfony": ">=2.7"
+        "symfony/console": ">=2.7",
+        "symfony/filesystem": ">=2.7"
     },
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
