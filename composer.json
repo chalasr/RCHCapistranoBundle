@@ -14,8 +14,7 @@
     "require": {
         "php": "> 5.4",
         "symfony/console": ">=2.7",
-        "symfony/filesystem": ">=2.7",
-        "chalasdev/capistrano-bundle": "^1.0"
+        "symfony/filesystem": ">=2.7"
     },
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
