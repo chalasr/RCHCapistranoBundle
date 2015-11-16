@@ -1,3 +1,9 @@
+task :download_composer do
+  run "cd " + fetch(:composer_path) + " && curl -s https://getcomposer.org/installer | php"
+end
+
+before "symfony:composer:update", "download_composer"
+
 # Default
 set :symfony_env, 'prod'
 set :app_path, 'app'

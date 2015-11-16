@@ -106,7 +106,7 @@ class SetupCommand extends ContainerAwareCommand
       }
       foreach ($data as $k => $v) {
           if (!is_bool($v) && !is_int($v)) {
-              if (in_array($v, ['true', 'false'])) {
+              if (in_array($v, ['true', 'false', ':chmod'])) {
                   $expression = "set :{$k}, {$v}".PHP_EOL;
               } else {
                   $expression = "set :{$k}, '{$v}'".PHP_EOL;
@@ -116,6 +116,13 @@ class SetupCommand extends ContainerAwareCommand
           }
           file_put_contents($deployRb, $expression, FILE_APPEND);
       }
+      $question = new Question("<info>Have composer global installation ?</info> [<comment>Y</comment>]: ", 'Y');
+      $question->setAutocompleterValues(['Y', 'N']);
+      $haveComposer = $questionHelper->ask($input, $output, $question);
+      if ($haveComposer !== 'Y') {
+          $downloadComposerTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/composer-config.rb");
+          file_put_contents($deployRb, $downloadComposerTask, FILE_APPEND);
+      }
       $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
       $output->writeln(["<info>Successfully created.</info>", '']);
       $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
@@ -124,7 +131,7 @@ class SetupCommand extends ContainerAwareCommand
       $currentOs = php_uname('s');
       $serverOptions = [
           "domain" => [
-              "helper" => "example.fr",
+              "helper" => $data['ssh_user'],
               "label" => "Domain name"
           ],
       ];
@@ -154,7 +161,7 @@ class SetupCommand extends ContainerAwareCommand
       if ($currentOs == 'Darwin') {
           $sshOptions["keys"]["helper"] = "/Users/{$currentUser}/.ssh/id_rsa";
       } elseif ($currentOs == 'Linux') {
-          $sshOptions["keys"]["helper"] = "/home/{$currentUser}/.ssh/id_rsa";
+          $sshOptions["keys"]["helper"] = "/home/{$data['ssh_user']}/.ssh/id_rsa";
       }
       foreach ($sshOptions as $key => $property) {
           $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
