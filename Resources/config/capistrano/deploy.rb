@@ -1,5 +1,4 @@
 # Default
-set :symfony_env, 'prod'
 set :app_path, 'app'
 set :web_path, 'web'
 set :scm, 'git'

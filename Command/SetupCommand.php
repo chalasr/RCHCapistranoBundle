@@ -49,7 +49,7 @@ class SetupCommand extends ContainerAwareCommand
           "repo_url" => [
               "helper" => "git@github.com:{user}/{repo}.git",
               "label" => "Repository",
-              "autocomplete" => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com/rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"]
+              "autocomplete" => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com:rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"]
           ],
           "branch" =>  [
               "helper" => "master",
@@ -106,7 +106,7 @@ class SetupCommand extends ContainerAwareCommand
       }
       foreach ($data as $k => $v) {
           if (!is_bool($v) && !is_int($v)) {
-              if (in_array($v, ['true', 'false', ':chmod'])) {
+              if (in_array($v, ['true', 'false']) || $v[0] == ':') {
                   $expression = "set :{$k}, {$v}".PHP_EOL;
               } else {
                   $expression = "set :{$k}, '{$v}'".PHP_EOL;
@@ -116,7 +116,7 @@ class SetupCommand extends ContainerAwareCommand
           }
           file_put_contents($deployRb, $expression, FILE_APPEND);
       }
-      $question = new Question("<info>Have composer global installation ?</info> [<comment>Y</comment>]: ", 'Y');
+      $question = new Question("<info>Use global composer</info> [<comment>Y</comment>]: ", 'Y');
       $question->setAutocompleterValues(['Y', 'N']);
       $haveComposer = $questionHelper->ask($input, $output, $question);
       if ($haveComposer !== 'Y') {
@@ -149,7 +149,7 @@ class SetupCommand extends ContainerAwareCommand
           ],
           "keys" => [
               "label" => "Remote SSH key",
-              "helper" => ""
+              "helper" => "/home/{$data['ssh_user']}/.ssh/id_rsa"
           ],
       ];
       $sshProps = [
@@ -158,11 +158,6 @@ class SetupCommand extends ContainerAwareCommand
           "forward_agent" => false,
           "auth_methods" => "publickey password"
       ];
-      if ($currentOs == 'Darwin') {
-          $sshOptions["keys"]["helper"] = "/Users/{$currentUser}/.ssh/id_rsa";
-      } elseif ($currentOs == 'Linux') {
-          $sshOptions["keys"]["helper"] = "/home/{$data['ssh_user']}/.ssh/id_rsa";
-      }
       foreach ($sshOptions as $key => $property) {
           $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
           if (isset($property['autocomplete'])) {
