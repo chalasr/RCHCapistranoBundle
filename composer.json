@@ -18,5 +18,6 @@
     },
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
-    }
+    },
+    "target-dir": "Chalasdev/CapistranoBundle"
 }
