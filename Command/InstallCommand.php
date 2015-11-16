@@ -1,5 +1,13 @@
 <?php
 
+/*
+ * This file is part of the Sonata package.
+ *
+ * https://github.com/chalasr/CapistranoBundle
+ * (c) Robin Chalas <robin.chalas@gmail.com>
+ *
+ */
+
 namespace Chalasdev\CapistranoBundle\Command;
 
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;

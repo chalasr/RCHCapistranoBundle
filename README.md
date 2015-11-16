@@ -9,8 +9,8 @@ Symfony/console command that provide automation of your deployment workflow, bui
 - Symfony/Console >= 2.7
 - Symfony/Filesystem >= 2.7
 - Ruby >= 2.0
-- Bundler (rubygem)
-- Capistrano rubygems (Gemfile provided)
+- Bundler (Ruby gems manager)
+- Capistrano installed globally (Gemfile provided)
 
 ## Install
 
