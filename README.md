@@ -1,6 +1,6 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74/mini.png)](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74)
 
-# chalasdev/capistrano-bundle
+# Chalasdev/CapistranoBundle
 
 Symfony/console command that provide automation of your deployment workflow, built on top of Capistrano.
 
