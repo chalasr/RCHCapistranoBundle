@@ -40,22 +40,34 @@ class InstallCommand extends ContainerAwareCommand
         }
         if (false === $fs->exists("{$root}/../Capfile")) {
             $fs->touch("{$root}/../Capfile");
-            $capfile =
-            "require 'capistrano/setup'".PHP_EOL.
-            "require 'capistrano/deploy'".PHP_EOL.
-            "require 'capistrano/composer'".PHP_EOL.
-            "require 'capistrano/symfony'".PHP_EOL;
-            $fs->dumpFile("{$root}/../Capfile", $capfile);
+            $requirements = ['capistrano/setup', 'capistrano/deploy', 'capistrano/composer', 'capistrano/symfony'];
+            $fs->dumpFile("{$root}/../Capfile", $this->prepareCapfile($requirements));
         }
         if (false === $fs->exists("{$root}/../Gemfile")) {
             $fs->touch("{$root}/../Gemfile");
-            $gems =
-            "gem 'capistrano'".PHP_EOL.
-            "gem 'capistrano-symfony'".PHP_EOL.
-            "gem 'capistrano-rbenv'".PHP_EOL;
-            $fs->dumpFile("{$root}/../Gemfile", $gems);
+            $gems = ['capistrano', 'capistrano-symfony', 'capistrano-rbenv'];
+            $fs->dumpFile("{$root}/../Gemfile", $this->prepareGemfile($gems));
+        }
+        $output->writeln(['<info>Successfully generated </info><comment>Capfile</comment><info> and </info><comment>Gemfile</comment>', '']);
+    }
+
+    protected function prepareGemfile(array $gems)
+    {
+        $GemfileContent = "";
+        foreach ($gems as $gem) {
+            $GemfileContent .= "gem '{$gem}'".PHP_EOL;
         }
 
-        $output->writeln(['<info>Successfully generated </info><comment>Capfile</comment><info> and </info><comment>Gemfile</comment>', '']);
+        return $GemfileContent;
+    }
+
+    protected function prepareCapfile(array $requirements)
+    {
+        $CapfileContent = "";
+        foreach ($requirements as $gem) {
+            $CapfileContent .= "require '{$gem}'".PHP_EOL;
+        }
+
+        return $CapfileContent;
     }
 }
