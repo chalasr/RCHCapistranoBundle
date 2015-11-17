@@ -22,6 +22,7 @@ class SetupCommand extends ContainerAwareCommand
     public function __construct()
     {
         parent::__construct();
+
         $this->deployProperties = [
             'branch' => [
                 'helper' => 'master',
@@ -184,6 +185,7 @@ class SetupCommand extends ContainerAwareCommand
 
         return $data;
     }
+
 
     /**
      * Check for composer installation type
