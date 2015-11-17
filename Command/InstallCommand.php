@@ -16,10 +16,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-
 class InstallCommand extends ContainerAwareCommand
 {
-
     protected function configure()
     {
         $this
@@ -34,9 +32,9 @@ class InstallCommand extends ContainerAwareCommand
         $style = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $style);
         $root = $this->getContainer()->get('kernel')->getRootDir();
-        $welcome = $formatter->formatBlock("Welcome to chalasdev/capistrano", "title", true);
+        $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
         $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr']);
-        $output->writeln(['', " > generating <comment>./Capfile</comment>", " > generating <comment>./Gemfile</comment>", '']);
+        $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
         if (false !== $fs->exists("{$root}/../config")) {
             $fs->remove("{$root}/../config");
         }
@@ -58,7 +56,6 @@ class InstallCommand extends ContainerAwareCommand
             $fs->dumpFile("{$root}/../Gemfile", $gems);
         }
 
-        $output->writeln(["<info>Successfully generated </info><comment>Capfile</comment><info> and </info><comment>Gemfile</comment>", '']);
+        $output->writeln(['<info>Successfully generated </info><comment>Capfile</comment><info> and </info><comment>Gemfile</comment>', '']);
     }
-
 }
