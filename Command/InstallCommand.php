@@ -1,10 +1,10 @@
 <?php
 
 /*
-* This file is part of the Sonata package.
+* This file is part of Chalasdev/CapistranoBundle.
 *
 * https://github.com/chalasr/CapistranoBundle
-* (c) Robin Chalas <robin.chalas@gmail.com>
+* Robin Chalas <robin.chalas@gmail.com>
 *
 */
 

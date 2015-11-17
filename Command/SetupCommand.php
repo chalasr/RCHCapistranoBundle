@@ -1,10 +1,10 @@
 <?php
 
 /*
-* This file is part of the Sonata package.
+* This file is part of Chalasdev/CapistranoBundle.
 *
 * https://github.com/chalasr/CapistranoBundle
-* (c) Robin Chalas <robin.chalas@gmail.com>
+* Robin Chalas <robin.chalas@gmail.com>
 *
 */
 
@@ -19,98 +19,10 @@ use Symfony\Component\Filesystem\Filesystem;
 
 class SetupCommand extends ContainerAwareCommand
 {
-    protected function configure()
+    public function __construct()
     {
-        $this
-        ->setName('capistrano:setup')
-        ->setDescription('Setup capistrano deployment configuration in interactive mode');
-    }
-
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-    }
-
-    protected function interact(InputInterface $input, OutputInterface $output)
-    {
-        $fs = new Filesystem();
-        $root = $this->getContainer()->get('kernel')->getRootDir();
-        $questionHelper = $this->getHelper('question');
-        $formatter = $this->getHelper('formatter');
-        $style = new OutputFormatterStyle('white', 'blue', array('bold'));
-        $output->getFormatter()->setStyle('title', $style);
-        $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
-        $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
-        $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
-        $path = $root.'/../config/';
-        $deployRb = $path.'deploy.rb';
-        $appPath = explode('/', $root);
-        $appName = $appPath[count($appPath) - 2];
-        if ($fs->exists("{$path}/deploy.rb")) {
-            $fs->remove("{$path}/deploy.rb");
-            $fs->remove("{$path}/deploy");
-            $fs->remove("{$path}");
-            $fs->mirror("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano", "{$root}/../config/");
-        } else {
-            $fs->mirror("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano", "{$root}/../config/");
-        }
-        $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
-        foreach ($deployData as $k => $v) {
-            if (!is_bool($v) && !is_int($v)) {
-                if (in_array($v, ['true', 'false']) || $v[0] == ':') {
-                    $expression = "set :{$k}, {$v}".PHP_EOL;
-                } else {
-                    $expression = "set :{$k}, '{$v}'".PHP_EOL;
-                }
-            } else {
-                $expression = "set :{$k}, {$v}".PHP_EOL;
-            }
-            file_put_contents($deployRb, $expression, FILE_APPEND);
-        }
-        $this->checkComposer($input, $output, $questionHelper, $deployRb, $root);
-        $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
-        $output->writeln(['<info>Successfully created.</info>', '']);
-        $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
-        $stagingPath = $root.'/../config/deploy/production.rb';
-        $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
-        print_r($sshProps);
-        $expression = PHP_EOL."server '{$sshProps['domain']}',".PHP_EOL."user: '{$deployData['ssh_user']}',".PHP_EOL;
-        $expression .= 'ssh_options: {'.PHP_EOL;
-        foreach ($sshProps as $k => $v) {
-            if($k == 'domain') {
-                continue;
-            }
-            if ($k == 'user') {
-                $expression .= "		{$k}: '{$v}',".PHP_EOL;
-            } else {
-                $expression .= "		{$k}: {$v},".PHP_EOL;
-            }
-        }
-        $expression .= '}';
-        file_put_contents($stagingPath, $expression);
-        $output->writeln('<comment>Remote server successfully configured</comment>');
-    }
-
-    /**
-     * Configure deployment options for capistrano.
-     *
-     * @param string $appName app name
-     *
-     * @return array $data
-     */
-    protected function configureDeploy($input, $output, $questionHelper, $appName)
-    {
-        $data = [];
-        $properties = [
-            'application' => [
-                'helper' => $appName,
-                'label' => 'Application',
-                'autocomplete' => [$appName],
-            ],
-            'repo_url' => [
-                'helper' => 'git@github.com:{user}/{repo}.git',
-                'label' => 'Repository',
-                'autocomplete' => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com:rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"],
-            ],
+        parent::__construct();
+        $this->deployProperties = [
             'branch' => [
                 'helper' => 'master',
                 'label' => 'Git branch',
@@ -151,6 +63,114 @@ class SetupCommand extends ContainerAwareCommand
                 'label' => 'Number of releases',
             ],
         ];
+    }
+
+    protected function configure()
+    {
+        $this
+        ->setName('capistrano:setup')
+        ->setDescription('Setup capistrano deployment configuration in interactive mode');
+    }
+
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+    }
+
+    protected function interact(InputInterface $input, OutputInterface $output)
+    {
+        $fs = new Filesystem();
+        $root = $this->getContainer()->get('kernel')->getRootDir();
+        $questionHelper = $this->getHelper('question');
+        $formatter = $this->getHelper('formatter');
+        $style = new OutputFormatterStyle('white', 'blue', array('bold'));
+        $output->getFormatter()->setStyle('title', $style);
+        $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
+        $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
+        $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
+        $deployRb = $root.'/../config/deploy.rb';
+        $appPath = explode('/', $root);
+        $appName = $appPath[count($appPath) - 2];
+        $this->initConfig($fs, $root);
+        $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
+        foreach ($deployData as $k => $v) {
+            if (in_array($v, ['true', 'false']) || $v[0] == ':' || is_bool($v) || is_int($v)) {
+                $expression = "set :{$k}, {$v}".PHP_EOL;
+            } else {
+                $expression = "set :{$k}, '{$v}'".PHP_EOL;
+            }
+            file_put_contents($deployRb, $expression, FILE_APPEND);
+        }
+        $this->checkComposer($input, $output, $questionHelper, $deployRb, $root);
+        $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
+        $output->writeln(['<info>Successfully created.</info>', '']);
+        $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
+        $stagingPath = $root.'/../config/deploy/production.rb';
+        $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
+        $expression = PHP_EOL."server '{$sshProps['domain']}',".PHP_EOL."user: '{$deployData['ssh_user']}',".PHP_EOL;
+        $expression .= 'ssh_options: {'.PHP_EOL;
+        foreach ($sshProps as $k => $v) {
+            if($k == 'domain') {
+                continue;
+            }
+            if ($k == 'user') {
+                $expression .= "		{$k}: '{$v}',".PHP_EOL;
+            } else {
+                $expression .= "		{$k}: {$v},".PHP_EOL;
+            }
+        }
+        $expression .= '}';
+        file_put_contents($stagingPath, $expression, FILE_APPEND);
+        $output->writeln('<comment>Remote server successfully configured</comment>');
+    }
+
+    /**
+     * Dump capistrano configuration files from vendor.
+     *
+     * @param  class $fs symfony/file-system
+     *
+     * @param  string $root Application root dir
+     */
+    protected function initConfig($fs, $root)
+    {
+        $path = $root.'/../config/';
+        if (!$fs->exists("{$path}/deploy.rb") || !$fs->exists("{$path}/deploy/production.rb")) {
+            return $fs->mirror(
+                "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano",
+                "{$root}/../config/"
+            );
+        }
+        $fs->remove("{$path}/deploy.rb");
+        $fs->remove("{$path}/deploy");
+        $fs->remove("{$path}");
+
+        return $fs->mirror(
+            "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano",
+            "{$root}/../config/"
+        );
+    }
+
+    /**
+     * Configure deployment options for capistrano.
+     *
+     * @param string $appName app name
+     *
+     * @return array $data
+     */
+    protected function configureDeploy($input, $output, $questionHelper, $appName)
+    {
+        $data = [];
+        $add = [];
+        $add['application'] = [
+            'helper' => $appName,
+            'label' => 'Application',
+            'autocomplete' => [$appName],
+        ];
+        $add['repo_url'] = [
+            'helper' => 'git@github.com:{user}/{repo}.git',
+            'label' => 'Repository',
+            'autocomplete' => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com:rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"],
+        ];
+        $properties = $add + $this->deployProperties;
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";
@@ -165,6 +185,13 @@ class SetupCommand extends ContainerAwareCommand
         return $data;
     }
 
+    /**
+     * Check for composer installation type
+     *
+     * @param  class $questionHelper QuestionHelper
+     *
+     * @param  string $deployRb      deploy.rb path
+     */
     protected function checkComposer($input, $output, $questionHelper, $deployRb, $root)
     {
         $question = new Question('<info>Use global composer</info> [<comment>Y</comment>]: ', 'Y');
@@ -176,10 +203,17 @@ class SetupCommand extends ContainerAwareCommand
         }
     }
 
+    /**
+     * Configure SSH options for production staging.
+     *
+     * @param  class $questionHelper QuestionHelper
+     *
+     * @param  array $deployData deploy.rb parameters
+     *
+     * @return array $sshProps deploy/production.rb staging config
+     */
     protected function configureSSH($input, $output, $questionHelper, $deployData)
     {
-        $currentUser = get_current_user();
-        $currentOs = php_uname('s');
         $serverOptions = [
             'domain' => [
                 'helper' => $deployData['ssh_user'],
