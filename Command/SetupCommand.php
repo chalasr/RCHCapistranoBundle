@@ -102,6 +102,7 @@ class SetupCommand extends ContainerAwareCommand
             file_put_contents($deployRb, $expression, FILE_APPEND);
         }
         $this->checkComposer($input, $output, $questionHelper, $deployRb, $root);
+        $this->checkSchemaUpdate($input, $output, $questionHelper, $deployRb, $root);
         $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
         $output->writeln(['<info>Successfully created.</info>', '']);
         $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
@@ -202,6 +203,24 @@ class SetupCommand extends ContainerAwareCommand
         if ($haveComposer !== 'Y') {
             $downloadComposerTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/composer-config.rb");
             file_put_contents($deployRb, $downloadComposerTask, FILE_APPEND);
+        }
+    }
+
+    /**
+     * Check for database schema update
+     *
+     * @param  class $questionHelper QuestionHelper
+     *
+     * @param  string $deployRb      deploy.rb path
+     */
+    protected function checkSchemaUpdate($input, $output, $questionHelper, $deployRb, $root)
+    {
+        $question = new Question('<info>Update database schema</info> [<comment>Y</comment>]: ', 'Y');
+        $question->setAutocompleterValues(['Y', 'N']);
+        $wantDump = $questionHelper->ask($input, $output, $question);
+        if ($wantDump !== 'Y') {
+            $dumpTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/database-dump.rb");
+            file_put_contents($deployRb, $dumpTask, FILE_APPEND);
         }
     }
 
