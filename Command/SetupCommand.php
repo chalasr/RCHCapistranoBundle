@@ -94,6 +94,9 @@ class SetupCommand extends ContainerAwareCommand
         $this->initConfig($fs, $root);
         $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
         foreach ($deployData as $k => $v) {
+            if ($k == 'deploy_to' || $k == 'ssh_user') {
+                continue;
+            }
             if (in_array($v, ['true', 'false']) || $v[0] == ':' || is_bool($v) || is_int($v)) {
                 $expression = "set :{$k}, {$v}".PHP_EOL;
             } else {
@@ -111,7 +114,7 @@ class SetupCommand extends ContainerAwareCommand
         $expression = PHP_EOL."server '{$sshProps['domain']}',".PHP_EOL."user: '{$deployData['ssh_user']}',".PHP_EOL;
         $expression .= 'ssh_options: {'.PHP_EOL;
         foreach ($sshProps as $k => $v) {
-            if($k == 'domain') {
+            if ($k == 'domain') {
                 continue;
             }
             if ($k == 'user') {
@@ -120,7 +123,9 @@ class SetupCommand extends ContainerAwareCommand
                 $expression .= "		{$k}: {$v},".PHP_EOL;
             }
         }
-        $expression .= '}';
+        $expression .= '}'.PHP_EOL;
+        $expression .= sprintf('set(:deploy_to, "%s")', $deployData['deploy_to']);
+
         file_put_contents($stagingPath, $expression, FILE_APPEND);
         $output->writeln('<comment>Remote server successfully configured</comment>');
     }
@@ -128,13 +133,12 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * Dump capistrano configuration files from vendor.
      *
-     * @param  class $fs symfony/file-system
-     *
-     * @param  string $root Application root dir
+     * @param class  $fs   symfony/file-system
+     * @param string $root Application root dir
      */
     protected function initConfig($fs, $root)
     {
-        $path = $root.'/../config/';
+        $path = $root.'/../config';
         if (!$fs->exists("{$path}/deploy.rb") || !$fs->exists("{$path}/deploy/production.rb")) {
             return $fs->mirror(
                 "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano",
@@ -187,39 +191,36 @@ class SetupCommand extends ContainerAwareCommand
         return $data;
     }
 
-
     /**
-     * Check for composer installation type
+     * Check for composer installation type.
      *
-     * @param  class $questionHelper QuestionHelper
-     *
-     * @param  string $deployRb      deploy.rb path
+     * @param class  $questionHelper QuestionHelper
+     * @param string $deployRb       deploy.rb path
      */
     protected function checkComposer($input, $output, $questionHelper, $deployRb, $root)
     {
-        $question = new Question('<info>Use global composer</info> [<comment>Y</comment>]: ', 'Y');
+        $question = new Question('<info>Download composer</info> [<comment>Y</comment>]: ', 'Y');
         $question->setAutocompleterValues(['Y', 'N']);
-        $haveComposer = $questionHelper->ask($input, $output, $question);
-        if ($haveComposer !== 'Y') {
-            $downloadComposerTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/composer-config.rb");
+        $downloadComposer = $questionHelper->ask($input, $output, $question);
+        if ($downloadComposer == 'Y') {
+            $downloadComposerTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/download_composer.rb");
             file_put_contents($deployRb, $downloadComposerTask, FILE_APPEND);
         }
     }
 
     /**
-     * Check for database schema update
+     * Check for database schema update.
      *
-     * @param  class $questionHelper QuestionHelper
-     *
-     * @param  string $deployRb      deploy.rb path
+     * @param class  $questionHelper QuestionHelper
+     * @param string $deployRb       deploy.rb path
      */
     protected function checkSchemaUpdate($input, $output, $questionHelper, $deployRb, $root)
     {
         $question = new Question('<info>Update database schema</info> [<comment>Y</comment>]: ', 'Y');
         $question->setAutocompleterValues(['Y', 'N']);
         $wantDump = $questionHelper->ask($input, $output, $question);
-        if ($wantDump !== 'Y') {
-            $dumpTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/database-dump.rb");
+        if ($wantDump == 'Y') {
+            $dumpTask = file_get_contents("{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/dump_database.rb");
             file_put_contents($deployRb, $dumpTask, FILE_APPEND);
         }
     }
@@ -227,9 +228,8 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * Configure SSH options for production staging.
      *
-     * @param  class $questionHelper QuestionHelper
-     *
-     * @param  array $deployData deploy.rb parameters
+     * @param class $questionHelper QuestionHelper
+     * @param array $deployData     deploy.rb parameters
      *
      * @return array $sshProps deploy/production.rb staging config
      */
