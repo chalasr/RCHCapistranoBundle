@@ -10,6 +10,7 @@
 
 namespace Chalasdev\CapistranoBundle\Command;
 
+use Chalasdev\CapistranoBundle\Generator\StagingGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -40,11 +41,11 @@ class SetupCommand extends ContainerAwareCommand
                 'helper' => 'master',
                 'label' => 'Git branch',
             ],
-            'ssh_user' => [
+            'sshUser' => [
                 'helper' => 'chalasr',
                 'label' => 'SSH username',
             ],
-            'deploy_to' => [
+            'deployTo' => [
                 'helper' => '',
                 'label' => 'Remote directory',
             ],
@@ -108,21 +109,24 @@ class SetupCommand extends ContainerAwareCommand
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $fs = new Filesystem();
-        $root = $this->getContainer()->get('kernel')->getRootDir();
         $questionHelper = $this->getHelper('question');
         $formatter = $this->getHelper('formatter');
         $style = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $style);
         $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
         $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
-        $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
+        $root = $this->getContainer()->get('kernel')->getRootDir();
         $deployRb = $root.'/../config/deploy.rb';
+        $stagingPath = $root.'/../config/deploy/production.rb';
         $appPath = explode('/', $root);
         $appName = $appPath[count($appPath) - 2];
+
         $this->initConfig($fs, $root);
+        $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
         $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
+
         foreach ($deployData as $k => $v) {
-            if ($k == 'deploy_to' || $k == 'ssh_user') {
+            if ($k == 'deployTo' || $k == 'sshUser') {
                 continue;
             }
             if (in_array($v, ['true', 'false']) || $v[0] == ':' || is_bool($v) || is_int($v)) {
@@ -132,30 +136,18 @@ class SetupCommand extends ContainerAwareCommand
             }
             file_put_contents($deployRb, $expression, FILE_APPEND);
         }
+
         $this->checkComposer($input, $output, $questionHelper, $deployRb, $root);
         $this->checkSchemaUpdate($input, $output, $questionHelper, $deployRb, $root);
         $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
         $output->writeln(['<info>Successfully created.</info>', '']);
         $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
-        $stagingPath = $root.'/../config/deploy/production.rb';
-        $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
-        $expression = PHP_EOL."server '{$sshProps['domain']}',".PHP_EOL."user: '{$deployData['ssh_user']}',".PHP_EOL;
-        $expression .= 'ssh_options: {'.PHP_EOL;
-        foreach ($sshProps as $k => $v) {
-            if ($k == 'domain') {
-                continue;
-            }
-            if ($k == 'user') {
-                $expression .= "		{$k}: '{$v}',".PHP_EOL;
-            } else {
-                $expression .= "		{$k}: {$v},".PHP_EOL;
-            }
-        }
-        $expression .= '}'.PHP_EOL;
-        $expression .= sprintf('set(:deploy_to, "%s")', $deployData['deploy_to']);
 
-        file_put_contents($stagingPath, $expression, FILE_APPEND);
-        $output->writeln('<comment>Remote server successfully configured</comment>');
+        $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
+        $staging = new StagingGenerator($sshProps);
+        file_put_contents($stagingPath, $staging->generate(), FILE_APPEND);
+
+        return $output->writeln('<comment>Remote server successfully configured</comment>');
     }
 
     /**
@@ -169,20 +161,17 @@ class SetupCommand extends ContainerAwareCommand
     protected function initConfig(Filesystem $fs, $root)
     {
         $path = $root.'/../config';
-        if (!$fs->exists("{$path}/deploy.rb") || !$fs->exists("{$path}/deploy/production.rb")) {
-            return $fs->mirror(
-                "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano",
-                "{$root}/../config/"
-            );
-        }
-        $fs->remove("{$path}/deploy.rb");
-        $fs->remove("{$path}/deploy");
-        $fs->remove("{$path}");
+        $bundle = $root.'/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle';
 
-        return $fs->mirror(
-            "{$root}/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle/Resources/config/capistrano",
-            "{$root}/../config/"
-        );
+        if (!$fs->exists("{$path}/deploy.rb") || !$fs->exists("{$path}/deploy/production.rb")) {
+            return $fs->mirror($bundle.'/Resources/config/capistrano', $path);
+        }
+
+        $fs->remove($path.'/deploy.rb');
+        $fs->remove($path.'/deploy');
+        $fs->remove($path);
+
+        return $fs->mirror($bundle.'/Resources/config/capistrano', $path);
     }
 
     /**
@@ -207,12 +196,16 @@ class SetupCommand extends ContainerAwareCommand
         $add['repo_url'] = [
             'helper' => 'git@github.com:{user}/{repo}.git',
             'label' => 'Repository',
-            'autocomplete' => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com:rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"],
+            'autocomplete' => [
+                sprintf('git@github.com:chalasr/%s.git', $appName),
+                sprintf('git@git.sutunam.com:rchalas/%s.git', $appName),
+                sprintf('git@git.chaladev.fr:chalasr/%s.git', $appName),
+            ],
         ];
         $properties = $add + $this->deployProps;
         foreach ($properties as $key => $property) {
-            if ('deploy_to' == $key && null !== $data['ssh_user']) {
-                $property['helper'] = "/home/{$data['ssh_user']}/public_html";
+            if ('deployTo' == $key && null !== $data['sshUser']) {
+                $property['helper'] = "/home/{$data['sshUser']}/public_html";
             }
             $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
             if (isset($property['autocomplete'])) {
@@ -278,45 +271,42 @@ class SetupCommand extends ContainerAwareCommand
     {
         $serverOptions = [
             'domain' => [
-                'helper' => $deployData['ssh_user'],
+                'helper' => $deployData['sshUser'],
                 'label' => 'Domain name',
             ],
         ];
-        $serverProps = [];
-        $question = new Question("<info>{$serverOptions['domain']['label']}</info> [<comment>{$serverOptions['domain']['helper']}</comment>]: ", $serverOptions['domain']['helper']);
-        $serverProps['domain'] = $questionHelper->ask($input, $output, $question);
         $sshOptions = [
-            'forward_agent' => [
-                'label' => 'SSH forward_agent',
+            'forwardAgent' => [
+                'label' => 'SSH forward agent',
                 'helper' => 'false',
             ],
-            'auth_methods' => [
+            'authMethods' => [
                 'label' => 'SSH auth method',
                 'helper' => 'publickey password',
             ],
             'keys' => [
                 'label' => 'Remote SSH key',
-                'helper' => "/home/{$deployData['ssh_user']}/.ssh/id_rsa",
+                'helper' => sprintf('/home/%s/.ssh/id_rsa', $deployData['sshUser']),
             ],
         ];
         $sshProps = [
-            'user' => $deployData['ssh_user'],
-            'keys' => '',
-            'forward_agent' => false,
-            'auth_methods' => 'publickey password',
+          'user' => $deployData['sshUser'],
+          'keys' => '',
+          'forwardAgent' => false,
+          'authMethods' => 'publickey password',
+          'deployTo' => $deployData['deployTo'],
         ];
+
+        $question = new Question("<info>{$serverOptions['domain']['label']}</info> [<comment>{$serverOptions['domain']['helper']}</comment>]: ", $serverOptions['domain']['helper']);
+        $sshProps['domain'] = $questionHelper->ask($input, $output, $question);
+
         foreach ($sshOptions as $key => $property) {
             $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
             if (isset($property['autocomplete'])) {
                 $question->setAutocompleterValues($property['autocomplete']);
             }
-            if (in_array($key, ['auth_methods', 'keys'])) {
-                $sshProps[$key] = '%w('.$questionHelper->ask($input, $output, $question).')';
-            } else {
-                $sshProps[$key] = $questionHelper->ask($input, $output, $question);
-            }
+            $sshProps[$key] = $questionHelper->ask($input, $output, $question);
         }
-        $sshProps['domain'] = $serverProps['domain'];
 
         return $sshProps;
     }
