@@ -17,13 +17,25 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * Setup deployment workflow on top of capistrano.
+ *
+ * @author Robin Chalas <robin.chalas@gmail.com>
+ */
 class SetupCommand extends ContainerAwareCommand
 {
+    /**
+     * @property array
+     */
+    protected $deployProps;
+
+    /**
+     * Constructor.
+     */
     public function __construct()
     {
         parent::__construct();
-
-        $this->deployProperties = [
+        $this->deployProps = array(
             'branch' => [
                 'helper' => 'master',
                 'label' => 'Git branch',
@@ -63,20 +75,36 @@ class SetupCommand extends ContainerAwareCommand
                 'helper' => 3,
                 'label' => 'Number of releases',
             ],
-        ];
+        );
     }
 
+    /**
+     * Configures command.
+     */
     protected function configure()
     {
         $this
-        ->setName('capistrano:setup')
-        ->setDescription('Setup capistrano deployment configuration in interactive mode');
+          ->setName('capistrano:setup')
+          ->setDescription('Setup capistrano deployment configuration in interactive mode')
+        ;
     }
 
+    /**
+     * Executes state.
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
     }
 
+    /**
+     * Starts an interactive question-answer dialog.
+     *
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $fs = new Filesystem();
@@ -133,10 +161,12 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * Dump capistrano configuration files from vendor.
      *
-     * @param class  $fs   symfony/file-system
-     * @param string $root Application root dir
+     * @param Filesystem $fs
+     * @param string     $root Root directory
+     *
+     * @return mixed Filesystem::mirror
      */
-    protected function initConfig($fs, $root)
+    protected function initConfig(Filesystem $fs, $root)
     {
         $path = $root.'/../config';
         if (!$fs->exists("{$path}/deploy.rb") || !$fs->exists("{$path}/deploy/production.rb")) {
@@ -158,11 +188,14 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * Configure deployment options for capistrano.
      *
-     * @param string $appName app name
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param QuestionHelper  $questionHelper
+     * @param string          $appName        App name
      *
      * @return array $data
      */
-    protected function configureDeploy($input, $output, $questionHelper, $appName)
+    protected function configureDeploy(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $appName)
     {
         $data = [];
         $add = [];
@@ -176,7 +209,7 @@ class SetupCommand extends ContainerAwareCommand
             'label' => 'Repository',
             'autocomplete' => ["git@github.com:chalasr/{$appName}.git", "git@git.sutunam.com:rchalas/{$appName}.git", "git@git.chaladev.fr:chalasr/{$appName}.git"],
         ];
-        $properties = $add + $this->deployProperties;
+        $properties = $add + $this->deployProps;
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";
@@ -192,12 +225,15 @@ class SetupCommand extends ContainerAwareCommand
     }
 
     /**
-     * Check for composer installation type.
+     * Asks for composer strategy.
      *
-     * @param class  $questionHelper QuestionHelper
-     * @param string $deployRb       deploy.rb path
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param QuestionHelper  $questionHelper
+     * @param string          $deployRb
+     * @param string          $root
      */
-    protected function checkComposer($input, $output, $questionHelper, $deployRb, $root)
+    protected function checkComposer(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployRb, $root)
     {
         $question = new Question('<info>Download composer</info> [<comment>Y</comment>]: ', 'Y');
         $question->setAutocompleterValues(['Y', 'N']);
@@ -209,12 +245,15 @@ class SetupCommand extends ContainerAwareCommand
     }
 
     /**
-     * Check for database schema update.
+     * Asks for database schema updating strategy.
      *
-     * @param class  $questionHelper QuestionHelper
-     * @param string $deployRb       deploy.rb path
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param QuestionHelper  $questionHelper
+     * @param string          $deployRb
+     * @param string          $root
      */
-    protected function checkSchemaUpdate($input, $output, $questionHelper, $deployRb, $root)
+    protected function checkSchemaUpdate(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployRb, $root)
     {
         $question = new Question('<info>Update database schema</info> [<comment>Y</comment>]: ', 'Y');
         $question->setAutocompleterValues(['Y', 'N']);
@@ -228,12 +267,14 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * Configure SSH options for production staging.
      *
-     * @param class $questionHelper QuestionHelper
-     * @param array $deployData     deploy.rb parameters
+     * @param InputInterface  $input
+     * @param OutputInterface $output
+     * @param QuestionHelper  $questionHelper
+     * @param array           $deployData
      *
-     * @return array $sshProps deploy/production.rb staging config
+     * @return array $sshProps Staging configuration
      */
-    protected function configureSSH($input, $output, $questionHelper, $deployData)
+    protected function configureSSH(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {
         $serverOptions = [
             'domain' => [
