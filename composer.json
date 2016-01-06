@@ -8,14 +8,14 @@
         {
             "name": "Robin CHALAS",
             "email": "robin.chalas@gmail.com",
-            "homepage": "https://github.com/chalasr"
+            "homepage": "https://github.com/chalasr/CapistranoBundle"
         }
     ],
     "require": {
         "php": "> 5.4",
         "symfony/console": ">=2.7",
         "symfony/filesystem": ">=2.7",
-        "symfony/yaml": "^3.0"
+        "symfony/yaml": ">=2.6 <2.8"
     },
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
