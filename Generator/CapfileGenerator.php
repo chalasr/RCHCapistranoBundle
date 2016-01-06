@@ -47,7 +47,5 @@ class CapfileGenerator extends AbstractGenerator
         }
 
         fwrite($this->file, $this->addHeaders($capfile));
-
-        return $this;
     }
 }

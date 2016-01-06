@@ -50,8 +50,6 @@ set(:deploy_to, '<deployTo>')";
      * Write staging in file.
      *
      * @param string $staging Generated staging
-     *
-     * @return resource
      */
     public function write()
     {
@@ -62,7 +60,5 @@ set(:deploy_to, '<deployTo>')";
 
         $content = str_replace($placeHolders, $replacements, self::$template);
         fwrite($this->file, $this->addHeaders($content));
-
-        return $this;
     }
 }

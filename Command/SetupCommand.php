@@ -55,7 +55,7 @@ class SetupCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      *
-     * @return OutputInterface $output
+     * @return OutputInterface
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
@@ -66,14 +66,12 @@ class SetupCommand extends ContainerAwareCommand
         $output->getFormatter()->setStyle('title', $style);
         $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
         $root = $this->getContainer()->get('kernel')->getRootDir();
-        $deployRb = $root.'/../config/deploy.rb';
         $appPath = explode('/', $root);
         $appName = $appPath[count($appPath) - 2];
 
         $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
         $this->initConfig($fs, $root);
         $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
-        //FLECHER
         $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
         $deployFile = new DeployGenerator($deployData, $root);
         $deployFile->generate();
@@ -84,7 +82,6 @@ class SetupCommand extends ContainerAwareCommand
 
         $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
         $staging = new StagingGenerator($sshProps, $root);
-
         $staging->generate();
 
         return $output->writeln('<comment>Remote server successfully configured</comment>');
@@ -118,9 +115,9 @@ class SetupCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param QuestionHelper  $questionHelper
-     * @param string          $appName        App name
+     * @param string          $appName
      *
-     * @return array $data
+     * @return array
      */
     protected function configureDeploy(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $appName)
     {
@@ -164,7 +161,9 @@ class SetupCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param QuestionHelper  $questionHelper
-     * @param string          $deployRb       deploy.rb path
+     * @param array           $deployData
+     *
+     * @return bool
      */
     protected function checkComposer(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {
@@ -182,8 +181,9 @@ class SetupCommand extends ContainerAwareCommand
      * @param InputInterface  $input
      * @param OutputInterface $output
      * @param QuestionHelper  $questionHelper
-     * @param string          $deployRb       deploy.rb path
-     * @param string          $root           App root
+     * @param array           $deployData
+     *
+     * @return bool
      */
     protected function checkSchemaUpdate(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {
@@ -203,7 +203,7 @@ class SetupCommand extends ContainerAwareCommand
      * @param QuestionHelper  $questionHelper
      * @param array           $deployData
      *
-     * @return array $sshProps deploy/production.rb staging config
+     * @return array The production staging configuration
      */
     protected function configureSSH(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {

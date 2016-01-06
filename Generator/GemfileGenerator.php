@@ -47,7 +47,5 @@ class GemfileGenerator extends AbstractGenerator
         }
 
         fwrite($this->file, $this->addHeaders($gemfile));
-
-        return $this;
     }
 }
