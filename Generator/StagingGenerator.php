@@ -15,13 +15,8 @@ namespace Chalasdev\CapistranoBundle\Generator;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class StagingGenerator extends AbstractGenerator implements GeneratorInterface
+class StagingGenerator extends AbstractGenerator
 {
-    /**
-     * @var string
-     */
-    protected $name;
-
     /**
      * @var string
      */
@@ -45,31 +40,10 @@ set(:deploy_to, '<deployTo>')";
      * @param string $path
      * @param string $name
      */
-    public function __construct(array $parameters, $path, $name = 'production')
+    public function __construct(array $parameters, $path, $name = 'production.rb')
     {
-        parent::__construct($parameters, $path);
-        $this->name = $name;
-    }
-
-    /**
-     * Generates staging from parameters.
-     */
-    public function generate()
-    {
-        $this->open();
-
-        $this->write();
-
-        $this->close();
-    }
-
-    /**
-     * Open file at given path.
-     */
-    public function open()
-    {
-        $this->path = sprintf('%s/../config/deploy/%s.rb', $this->path, $this->name);
-        $this->file = fopen($this->path, 'a');
+        parent::__construct($parameters, $path, $name);
+        $this->path = sprintf('%s/../config/deploy/%s', $path, $name);
     }
 
     /**
@@ -86,26 +60,9 @@ set(:deploy_to, '<deployTo>')";
             $replacements[] = $value;
         }
 
-        $staging = str_replace($placeHolders, $replacements, self::$template);
+        $content = str_replace($placeHolders, $replacements, self::$template);
+        fwrite($this->file, $this->addHeaders($content));
 
-        fwrite($this->file, $this->addHeaders($staging));
-    }
-
-    /**
-     * Close generated file.
-     */
-    public function close()
-    {
-        fclose($this->file);
-    }
-
-    /**
-     * Get staging path.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
+        return $this;
     }
 }

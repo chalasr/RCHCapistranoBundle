@@ -15,7 +15,7 @@ namespace Chalasdev\CapistranoBundle\Generator;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class AbstractGenerator
+abstract class AbstractGenerator implements GeneratorInterface
 {
     /**
      * @var array
@@ -26,6 +26,11 @@ class AbstractGenerator
      * @var string
      */
     protected $path;
+
+    /**
+     * @var string
+     */
+    protected $name;
 
     /**
      * @var mixed
@@ -52,10 +57,58 @@ class AbstractGenerator
      * @param string $path
      * @param string $name
      */
-    public function __construct(array $parameters, $path)
+    public function __construct(array $parameters, $path, $name)
     {
         $this->parameters = $parameters;
-        $this->path = $path;
+        $this->path = sprintf('%s/../%s', $path, $name);
+        $this->name = $name;
+    }
+
+    /**
+     * Generates staging from parameters.
+     */
+    public function generate()
+    {
+        $this
+            ->open()
+            ->write()
+            ->close()
+        ;
+    }
+
+    /**
+     * Open file at given path.
+     */
+    public function open()
+    {
+        $this->file = fopen($this->path, 'w');
+
+        return $this;
+    }
+
+    /**
+     * Writes in file.
+     */
+    abstract public function write();
+
+    /**
+     * Close generated file.
+     */
+    public function close()
+    {
+        fclose($this->file);
+
+        return $this;
+    }
+
+    /**
+     * Add license headers.
+     *
+     * @return string
+     */
+    public function addHeaders($generated)
+    {
+        return sprintf('%s%s%s', self::$headersTemplate, PHP_EOL, $generated);
     }
 
     /**
@@ -69,7 +122,7 @@ class AbstractGenerator
     }
 
     /**
-     * Get staging path.
+     * Get file path.
      *
      * @return string
      */
@@ -79,12 +132,12 @@ class AbstractGenerator
     }
 
     /**
-     * Add license headers.
+     * Get staging path.
      *
      * @return string
      */
-    public function addHeaders($generated)
+    public function getName()
     {
-        return sprintf('%s%s%s', self::$headersTemplate, PHP_EOL, $generated);
+        return $this->name;
     }
 }

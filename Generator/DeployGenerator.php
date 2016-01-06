@@ -15,14 +15,8 @@ namespace Chalasdev\CapistranoBundle\Generator;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DeployGenerator extends AbstractGenerator implements GeneratorInterface
+class DeployGenerator extends AbstractGenerator
 {
-    protected $parameters;
-
-    protected $path;
-
-    protected $file;
-
     /**
      * Template of deploy.rb.
      *
@@ -113,34 +107,14 @@ end
      * @param array  $parameters
      * @param string $path
      */
-    public function __construct(array $parameters, $path)
+    public function __construct(array $parameters, $path, $name = 'deploy.rb')
     {
-        parent::__construct($parameters, $path);
+        parent::__construct($parameters, $path, $name);
+        $this->path = sprintf('%s/../config/%s', $path, $name);
     }
 
     /**
-     * Generates staging from parameters.
-     */
-    public function generate()
-    {
-        $this->open();
-
-        $this->write();
-
-        $this->close();
-    }
-
-    /**
-     * Open file at given path.
-     */
-    public function open()
-    {
-        $this->path = sprintf('%s/../config/deploy.rb', $this->path);
-        $this->file = fopen($this->path, 'a');
-    }
-
-    /**
-     * Write staging in file.
+     * Writes deployment file.
      */
     public function write()
     {
@@ -161,13 +135,7 @@ end
         }
 
         fwrite($this->file, $this->addHeaders($config));
-    }
 
-    /**
-     * Close generated file.
-     */
-    public function close()
-    {
-        fclose($this->file);
+        return $this;
     }
 }
