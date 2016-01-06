@@ -135,7 +135,5 @@ end
         }
 
         fwrite($this->file, $this->addHeaders($config));
-
-        return $this;
     }
 }

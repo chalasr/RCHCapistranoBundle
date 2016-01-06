@@ -2,44 +2,93 @@
 
 # Chalasdev/CapistranoBundle
 
-Symfony/console command that provide automation of your deployment workflow, built on top of Capistrano.
+Generates deployment workflows on top of capistrano.
 
-## Requirements
+Requirements
+============
 
-- Symfony/Console >= 2.7
-- Symfony/Filesystem >= 2.7
+- Symfony/Console >= 2.6
+- Symfony/Filesystem >= 2.6
+- Symfony/Yaml >= 2.6
 - Ruby >= 2.0
-- Bundler (Ruby gems manager)
-- Capistrano installed globally (Gemfile provided)
 
-## Install
+Installation
+============
 
-Download the bundle using [composer](http://getcomposer.org/) :
+Step 1: Download the Bundle
+---------------------------
 
-```composer require chalasdev/capistrano-bundle dev-master```
+Open a command console, enter your project directory and execute the
+following command to download the latest stable version of this bundle:
 
-Setup Gemfile and Capfile to manage ruby dependencies :
+```bash
+$ composer require chalasdev/capistrano-bundle dev-master
+```
 
-```app/console capistrano:install```
+This command requires you to have Composer installed globally, as explained
+in the [installation chapter](https://getcomposer.org/doc/00-intro.md)
+of the Composer documentation.
 
-Install rubygems by running :
+Step 2: Enable the Bundle
+-------------------------
 
-```bundle install```
+Then, enable the bundle by adding it to the list of registered bundles
+in the `app/AppKernel.php` file of your project:
 
-## Usage
+```php
+<?php
+// app/AppKernel.php
 
-Run the following command to setup your deployment workflow based on [capistrano/symfony](https://github.com/capistrano/symfony) tasks :
+// ...
+class AppKernel extends Kernel
+{
+    public function registerBundles()
+    {
+        $bundles = array(
+            // ...
 
-```app/console capistrano:setup```
+            new Chaladev\CapistranoBundle\ChalasdevCapistranoBundle(),
+        );
 
-## Deploy
+        // ...
+    }
 
-As long as your production branch is up-to-date, you can do ```cap production deploy``` each times you need, without any maintenance or perturbations.
+    // ...
+}
+```
 
-## Credits
+Step 3: Install Capistrano
+-------------------------
 
-Author : [Robin Chalas](https:/github.com/chalasr)
+Setup capistrano dependencies by creating a Gemfile and a Capfile :
 
-## License
+```
+app/console capistrano:install && bundle install
+```
+
+Usage
+======
+
+```
+app/console capistrano:setup
+```
+
+Deploy
+============
+
+```
+cap production deploy
+```
+
+[Advanced usage](https://github.com/capistrano/capistrano)
+
+Credits
+=======
+
+[Robin Chalas](https:/github.com/chalasr)  
+[robin.chalas@gmail.com](mailto:robin.chalas@gmail.com)
+
+License
+=======
 
 [![License](http://img.shields.io/:license-gpl3-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)

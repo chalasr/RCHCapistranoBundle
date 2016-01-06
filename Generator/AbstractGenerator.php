@@ -65,25 +65,21 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * Generates staging from parameters.
+     * Generates ruby file from parameters.
      */
     public function generate()
     {
-        $this
-            ->open()
-            ->write()
-            ->close()
-        ;
+        $this->open();
+        $this->write();
+        $this->close();
     }
 
     /**
-     * Open file at given path.
+     * Opens file at given path.
      */
     public function open()
     {
         $this->file = fopen($this->path, 'w');
-
-        return $this;
     }
 
     /**
@@ -97,8 +93,6 @@ abstract class AbstractGenerator implements GeneratorInterface
     public function close()
     {
         fclose($this->file);
-
-        return $this;
     }
 
     /**
@@ -109,35 +103,5 @@ abstract class AbstractGenerator implements GeneratorInterface
     public function addHeaders($generated)
     {
         return sprintf('%s%s%s', self::$headersTemplate, PHP_EOL, $generated);
-    }
-
-    /**
-     * Get parameters.
-     *
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * Get file path.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * Get staging path.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
     }
 }
