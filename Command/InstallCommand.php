@@ -53,7 +53,7 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function prepareGemfile(array $gems)
     {
-        $GemfileContent = "";
+        $GemfileContent = '';
         foreach ($gems as $gem) {
             $GemfileContent .= "gem '{$gem}'".PHP_EOL;
         }
@@ -63,7 +63,7 @@ class InstallCommand extends ContainerAwareCommand
 
     protected function prepareCapfile(array $requirements)
     {
-        $CapfileContent = "";
+        $CapfileContent = '';
         foreach ($requirements as $gem) {
             $CapfileContent .= "require '{$gem}'".PHP_EOL;
         }
