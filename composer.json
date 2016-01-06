@@ -15,7 +15,7 @@
         "php": "> 5.4",
         "symfony/console": ">=2.7",
         "symfony/filesystem": ">=2.7",
-        "symfony/yaml": ">=2.6 <2.8"
+        "symfony/yaml": ">2.3 <=2.6"
     },
     "autoload":     {
         "psr-0": { "Chalasdev\\CapistranoBundle": "" }
