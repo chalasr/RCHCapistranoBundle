@@ -1,6 +1,6 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74/mini.png)](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74)
 
-# Chalasdev/CapistranoBundle
+# RC/CapistranoBundle
 
 Generates deployment workflows on top of capistrano.
 
@@ -47,7 +47,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            new Chaladev\CapistranoBundle\ChalasdevCapistranoBundle(),
+            new Chaladev\CapistranoBundle\RCCapistranoBundle(),
         );
 
         // ...

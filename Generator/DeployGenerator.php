@@ -1,14 +1,14 @@
 <?php
 
 /*
-* This file is part of Chalasdev/CapistranoBundle.
+* This file is part of RC/CapistranoBundle.
 *
 * https://github.com/chalasr/CapistranoBundle
 * Robin Chalas <robin.chalas@gmail.com>
 *
 */
 
-namespace Chalasdev\CapistranoBundle\Generator;
+namespace RC\CapistranoBundle\Generator;
 
 /**
  * Generates stagings.

@@ -1,5 +1,5 @@
 {
-    "name": "chalasdev/capistrano-bundle",
+    "name": "rc/capistrano-bundle",
     "description": "Symfony/console command that provide automation of your deployment workflow on top of Capistrano.",
     "keywords": ["deploy", "bundle", "symfony2", "capistrano", "capifony", "production", "workflow"],
     "type": "symfony-bundle",
@@ -8,19 +8,19 @@
         {
             "name": "Robin CHALAS",
             "email": "robin.chalas@gmail.com",
-            "homepage": "https://github.com/chalasr/CapistranoBundle"
+            "homepage": "https://github.com/rc/CapistranoBundle"
         }
     ],
     "require": {
         "php": "> 5.4",
-        "symfony/console": ">=2.7",
-        "symfony/filesystem": ">=2.7",
-        "symfony/yaml": ">2.3 <=2.6"
+        "symfony/console": ">2.5 <=2.7",
+        "symfony/filesystem": "2.5 <=2.7",
+        "symfony/yaml": ">2.5 <=2.6"
     },
     "autoload":     {
-        "psr-0": { "Chalasdev\\CapistranoBundle": "" }
+        "psr-0": { "RC\\CapistranoBundle": "" }
     },
-    "target-dir": "Chalasdev/CapistranoBundle",
+    "target-dir": "RC/CapistranoBundle",
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.11"
     }

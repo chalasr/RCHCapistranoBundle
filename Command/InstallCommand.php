@@ -1,17 +1,17 @@
 <?php
 
 /*
-* This file is part of Chalasdev/CapistranoBundle.
+* This file is part of RC/CapistranoBundle.
 *
 * https://github.com/chalasr/CapistranoBundle
 * Robin Chalas <robin.chalas@gmail.com>
 *
 */
 
-namespace Chalasdev\CapistranoBundle\Command;
+namespace RC\CapistranoBundle\Command;
 
-use Chalasdev\CapistranoBundle\Generator\CapfileGenerator;
-use Chalasdev\CapistranoBundle\Generator\GemfileGenerator;
+use RC\CapistranoBundle\Generator\CapfileGenerator;
+use RC\CapistranoBundle\Generator\GemfileGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;

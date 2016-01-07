@@ -1,12 +1,23 @@
 <?php
 
 /*
-* This file is part of Chalasdev/CapistranoBundle.
+* This file is part of Rc/CapistranoBundle.
 *
-* https://github.com/chalasr/CapistranoBundle
 * Robin Chalas <robin.chalas@gmail.com>
 *
+* For more informations about license, please see the LICENSE
+* file distributed in this source code.
 */
+
+/*
+ * This file is part of the Sonata package.
+ *
+ * (c) Thomas Rabaix <thomas.rabaix@sonata-project.org>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 
 namespace Chalasdev\CapistranoBundle\Generator;
 

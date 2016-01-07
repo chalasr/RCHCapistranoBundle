@@ -1,9 +1,9 @@
 <?php
 
-namespace Chalasdev\CapistranoBundle;
+namespace RC\CapistranoBundle;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-class ChalasdevCapistranoBundle extends Bundle
+class RCCapistranoBundle extends Bundle
 {
 }

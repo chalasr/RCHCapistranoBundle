@@ -1,17 +1,17 @@
 <?php
 
 /*
-* This file is part of Chalasdev/CapistranoBundle.
+* This file is part of RC/CapistranoBundle.
 *
 * https://github.com/chalasr/CapistranoBundle
 * Robin Chalas <robin.chalas@gmail.com>
 *
 */
 
-namespace Chalasdev\CapistranoBundle\Command;
+namespace RC\CapistranoBundle\Command;
 
-use Chalasdev\CapistranoBundle\Generator\DeployGenerator;
-use Chalasdev\CapistranoBundle\Generator\StagingGenerator;
+use RC\CapistranoBundle\Generator\DeployGenerator;
+use RC\CapistranoBundle\Generator\StagingGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -95,7 +95,7 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function initConfig(Filesystem $fs, $root)
     {
-        $this->bundleDir = $root.'/../vendor/chalasdev/capistrano-bundle/Chalasdev/CapistranoBundle';
+        $this->bundleDir = $root.'/../vendor/chalasdev/capistrano-bundle/RC/CapistranoBundle';
         $path = $root.'/../config';
 
         if (!$fs->exists($path.'/deploy.rb') || !$fs->exists($path.'/deploy/production.rb')) {
