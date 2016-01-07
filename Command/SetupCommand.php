@@ -39,7 +39,7 @@ class SetupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('capistrano:setup')
+        ->setName('rch:capistrano:setup')
         ->setDescription('Setup capistrano deployment configuration in interactive mode');
     }
 

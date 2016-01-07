@@ -47,7 +47,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            new Chaladev\CapistranoBundle\RCHCapistranoBundle(),
+            new RCH\CapistranoBundle\RCHCapistranoBundle(),
         );
 
         // ...
@@ -63,14 +63,14 @@ Step 3: Install Capistrano
 Setup capistrano dependencies by creating a Gemfile and a Capfile :
 
 ```
-app/console capistrano:install && bundle install
+app/console rch:capistrano:install && bundle install
 ```
 
 Usage
 ======
 
 ```
-app/console capistrano:setup
+app/console rch:capistrano:setup
 ```
 
 Deploy
@@ -80,7 +80,7 @@ Deploy
 cap production deploy
 ```
 
-[Advanced usage](https://github.com/capistrano/capistrano)
+[Advanced usage](https://github.com/capistrano/capistrano#usage)
 
 Credits
 =======

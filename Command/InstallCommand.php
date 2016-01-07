@@ -32,7 +32,7 @@ class InstallCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('capistrano:install')
+        ->setName('rch:capistrano:install')
         ->setDescription('Setup capistrano deployment configuration in interactive mode');
     }
 
