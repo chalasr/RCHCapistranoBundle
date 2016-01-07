@@ -1,6 +1,6 @@
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74/mini.png)](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74)
 
-# RC/CapistranoBundle
+# RCH/CapistranoBundle
 
 Generates deployment workflows on top of capistrano.
 
@@ -22,7 +22,7 @@ Open a command console, enter your project directory and execute the
 following command to download the latest stable version of this bundle:
 
 ```bash
-$ composer require chalasdev/capistrano-bundle dev-master
+$ composer require chalasr/capistrano-bundle dev-master
 ```
 
 This command requires you to have Composer installed globally, as explained
@@ -47,7 +47,7 @@ class AppKernel extends Kernel
         $bundles = array(
             // ...
 
-            new Chaladev\CapistranoBundle\RCCapistranoBundle(),
+            new Chaladev\CapistranoBundle\RCHCapistranoBundle(),
         );
 
         // ...

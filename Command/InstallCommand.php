@@ -1,7 +1,7 @@
 <?php
 
 /*
-* This file is part of RC/CapistranoBundle.
+* This file is part of RCH/CapistranoBundle.
 *
 * Robin Chalas <robin.chalas@gmail.com>
 *
@@ -9,10 +9,10 @@
 * file distributed in this source code.
 */
 
-namespace RC\CapistranoBundle\Command;
+namespace RCH\CapistranoBundle\Command;
 
-use RC\CapistranoBundle\Generator\CapfileGenerator;
-use RC\CapistranoBundle\Generator\GemfileGenerator;
+use RCH\CapistranoBundle\Generator\CapfileGenerator;
+use RCH\CapistranoBundle\Generator\GemfileGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
@@ -47,7 +47,7 @@ class InstallCommand extends ContainerAwareCommand
         $output->getFormatter()->setStyle('title', $style);
         $root = $this->getContainer()->get('kernel')->getRootDir();
 
-        $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
+        $welcome = $formatter->formatBlock('Welcome to chalasr/capistrano', 'title', true);
         $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr']);
         $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
 

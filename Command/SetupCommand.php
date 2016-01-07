@@ -1,7 +1,7 @@
 <?php
 
 /*
-* This file is part of RC/CapistranoBundle.
+* This file is part of RCH/CapistranoBundle.
 *
 * Robin Chalas <robin.chalas@gmail.com>
 *
@@ -9,10 +9,10 @@
 * file distributed in this source code.
 */
 
-namespace RC\CapistranoBundle\Command;
+namespace RCH\CapistranoBundle\Command;
 
-use RC\CapistranoBundle\Generator\DeployGenerator;
-use RC\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Generator\DeployGenerator;
+use RCH\CapistranoBundle\Generator\StagingGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -65,7 +65,7 @@ class SetupCommand extends ContainerAwareCommand
         $formatter = $this->getHelper('formatter');
         $style = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $style);
-        $welcome = $formatter->formatBlock('Welcome to chalasdev/capistrano', 'title', true);
+        $welcome = $formatter->formatBlock('Welcome to chalasr/capistrano', 'title', true);
         $root = $this->getContainer()->get('kernel')->getRootDir();
         $appPath = explode('/', $root);
         $appName = $appPath[count($appPath) - 2];
@@ -96,7 +96,7 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function initConfig(Filesystem $fs, $root)
     {
-        $this->bundleDir = $root.'/../vendor/chalasdev/capistrano-bundle/RC/CapistranoBundle';
+        $this->bundleDir = $root.'/../vendor/chalasr/capistrano-bundle/RCH/CapistranoBundle';
         $path = $root.'/../config';
 
         if (!$fs->exists($path.'/deploy.rb') || !$fs->exists($path.'/deploy/production.rb')) {

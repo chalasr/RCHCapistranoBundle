@@ -2,7 +2,7 @@
 
 <phpunit bootstrap="./test/bootstrap.php" colors="true">
     <testsuites>
-        <testsuite name="RC\CapistranoBundle Test Suite">
+        <testsuite name="RCH\CapistranoBundle Test Suite">
             <directory suffix="Test.php">./test/Generator</directory>
         </testsuite>
     </testsuites>

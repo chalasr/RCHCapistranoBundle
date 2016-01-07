@@ -1,7 +1,7 @@
 <?php
 
 /*
-* This file is part of RC/CapistranoBundle.
+* This file is part of RCH/CapistranoBundle.
 *
 * Robin Chalas <robin.chalas@gmail.com>
 *
@@ -9,7 +9,7 @@
 * file distributed in this source code.
 */
 
-namespace RC\CapistranoBundle\Generator;
+namespace RCH\CapistranoBundle\Generator;
 
 /**
  * Generates stagings for capistrano.
