@@ -15,7 +15,7 @@
         "php": "> 5.4",
         "symfony/console": ">=2.5",
         "symfony/filesystem": ">=2.5",
-        "symfony/yaml": ">2.5 <=2.7"
+        "symfony/yaml": ">=2.5"
     },
     "autoload":     {
         "psr-0": { "RC\\CapistranoBundle": "" }
