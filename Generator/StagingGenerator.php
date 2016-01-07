@@ -3,9 +3,10 @@
 /*
 * This file is part of RC/CapistranoBundle.
 *
-* https://github.com/chalasr/CapistranoBundle
 * Robin Chalas <robin.chalas@gmail.com>
 *
+* For more informations about license, please see the LICENSE
+* file distributed in this source code.
 */
 
 namespace RC\CapistranoBundle\Generator;
