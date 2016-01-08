@@ -1,0 +1,58 @@
+<?php
+
+namespace RCH\CapistranoBundle\RCHCapistranoBundle\Util;
+
+use Symfony\Component\DependencyInjection\ContainerAware;
+
+class Capitalizer extends ContainerAware
+{
+    /**
+     * Convert strings from under_scores to CamelCase.
+     *
+     * @param mixed $base
+     *
+     * @return mixed
+     */
+    public function camelize($base)
+    {
+        $callback = create_function('$c', 'return strtoupper($c[1]);');
+
+        if (!is_array($base)) {
+            return preg_replace_callback('/_([a-z])/', $callback, $base);
+        }
+
+        foreach ($base as $key => $val) {
+            unset($base[$k]);
+            $newKey = preg_replace_callback('/_([a-z])/', $callback, $k);
+            $base[$newKey] = $val;
+        }
+
+        return $base;
+    }
+
+    /**
+     * Converts strings from camelCase to under_score.
+     *
+     * @param mixed $base
+     *
+     * @return mixed
+     */
+    public function underscorize($base)
+    {
+        $callback = create_function('$c', 'return "_" . strtolower($c[1]);');
+
+        if (!is_array($base)) {
+            $base[0] = strtolower($base[0]);
+
+            return preg_replace_callback('/([A-Z])/', $callback, $base);
+        }
+
+        foreach ($base as $key => $val) {
+            unset($base[$k]);
+            $newKey = preg_replace_callback('/([A-Z])/', $callback, $k);
+            $base[$newKey] = $val;
+        }
+
+        return $base;
+    }
+}

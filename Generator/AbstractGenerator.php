@@ -80,6 +80,7 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     public function open()
     {
+        var_dump($this->path);
         $this->file = fopen($this->path, 'w');
     }
 

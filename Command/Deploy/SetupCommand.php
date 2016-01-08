@@ -9,7 +9,7 @@
 * file distributed in this source code.
 */
 
-namespace RCH\CapistranoBundle\Command;
+namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
@@ -39,7 +39,7 @@ class SetupCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('rch:capistrano:setup')
+        ->setName('rch:deploy:setup')
         ->setDescription('Setup capistrano deployment configuration in interactive mode');
     }
 
@@ -138,7 +138,7 @@ class SetupCommand extends ContainerAwareCommand
                 sprintf('git@git.chaladev.fr:chalasr/%s.git', $appName),
             ],
         ];
-        $properties = $add + Yaml::parse(file_get_contents($this->bundleDir.'/Resources/config/deploy_config.yml'));
+        $properties = $add + Yaml::parse(file_get_contents($this->bundleDir.'/Resources/config/setup_dialog.yml'));
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";
@@ -216,7 +216,7 @@ class SetupCommand extends ContainerAwareCommand
         ];
         $sshOptions = [
             'forwardAgent' => [
-                'label'  => 'SSH forwardAgent',
+                'label'  => 'SSH forward agent',
                 'helper' => 'false',
             ],
             'authMethods' => [
