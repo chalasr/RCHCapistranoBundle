@@ -9,7 +9,7 @@
 * file distributed in this source code.
 */
 
-namespace RCH\CapistranoBundle\Command;
+namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\CapfileGenerator;
 use RCH\CapistranoBundle\Generator\GemfileGenerator;
@@ -32,7 +32,7 @@ class InstallCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-        ->setName('rch:capistrano:install')
+        ->setName('rch:deploy:install')
         ->setDescription('Setup capistrano deployment configuration in interactive mode');
     }
 
@@ -67,4 +67,7 @@ class InstallCommand extends ContainerAwareCommand
             '',
         ]);
     }
+
+    // TODO: Generate Sample app/config/rch/tasks/sample-task.yml.dist
+    // TODO: Generate Sample app/config/rch/staging/sample-prod.yml.dist
 }
