@@ -13,6 +13,7 @@ namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Util\OutputHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -29,9 +30,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SetupCommand extends ContainerAwareCommand
 {
-    protected $deployProperties;
-
-    protected $bundleDir;
+    use OutputHelper;
 
     /**
      * {@inheritdoc}
@@ -46,9 +45,7 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
-    {
-    }
+    protected function execute(InputInterface $input, OutputInterface $output) {}
 
     /**
      * Configures deployment.
@@ -60,30 +57,27 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $fs = new Filesystem();
         $questionHelper = $this->getHelper('question');
         $formatter = $this->getHelper('formatter');
-        $style = new OutputFormatterStyle('white', 'blue', array('bold'));
-        $output->getFormatter()->setStyle('title', $style);
-        $welcome = $formatter->formatBlock('Welcome to chalasr/capistrano', 'title', true);
-        $root = $this->getContainer()->get('kernel')->getRootDir();
-        $appPath = explode('/', $root);
+        $rootDir = $this->getRootDir();
+        $fs = new Filesystem();
+        $appPath = explode('/', $rootDir);
         $appName = $appPath[count($appPath) - 2];
 
-        $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr', '']);
-        $this->initConfig($fs, $root);
+        $this->initConfig($fs, $rootDir);
         $output->writeln([$formatter->formatSection('SETUP', 'Project settings'), '']);
+
         $deployData = $this->configureDeploy($input, $output, $questionHelper, $appName);
-        $deployFile = new DeployGenerator($deployData, $root);
-        $deployFile->generate();
+        $deploy = new DeployGenerator($deployData, $rootDir);
+        $this->generate($deploy);
 
         $output->writeln(['', " > generating <comment>{$appName}/config/deploy.rb</comment>"]);
         $output->writeln(['<info>Successfully created.</info>', '']);
         $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
 
         $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
-        $staging = new StagingGenerator($sshProps, $root);
-        $staging->generate();
+        $staging = new StagingGenerator($sshProps, $this->getCapistranoDir() . '/deploy/');
+        $this->generate($staging);
 
         return $output->writeln('<comment>Remote server successfully configured</comment>');
     }
@@ -92,22 +86,22 @@ class SetupCommand extends ContainerAwareCommand
      * Dump capistrano configuration skin from Resources directory.
      *
      * @param Filesystem $fs
-     * @param string     $root Application root dir
+     * @param string     $rootDir Application root dir
      */
-    protected function initConfig(Filesystem $fs, $root)
+    protected function initConfig(Filesystem $fs, $rootDir)
     {
-        $this->bundleDir = $root.'/../vendor/chalasr/capistrano-bundle/RCH/CapistranoBundle';
-        $path = $root.'/../config';
+        $bundleDir = $this->getBundleDir();
+        $path = $this->getCapistranoDir();
 
-        if (!$fs->exists($path.'/deploy.rb') || !$fs->exists($path.'/deploy/production.rb')) {
-            return $fs->mirror($this->bundleDir.'/Resources/config/capistrano', $path);
+        if (!$fs->exists($path . '/deploy.rb') || !$fs->exists($path . '/deploy/production.rb')) {
+            return $fs->mirror($bundleDir . '/Resources/config/capistrano', $path);
         }
 
-        $fs->remove($path.'/deploy.rb');
-        $fs->remove($path.'/deploy');
+        $fs->remove($path . '/deploy.rb');
+        $fs->remove($path . '/deploy');
         $fs->remove($path);
 
-        return $fs->mirror($this->bundleDir.'/Resources/config/capistrano', $path);
+        return $fs->mirror($bundleDir . '/Resources/config/capistrano', $path);
     }
 
     /**
@@ -123,22 +117,19 @@ class SetupCommand extends ContainerAwareCommand
     protected function configureDeploy(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $appName)
     {
         $data = [];
-        $add = [];
-        $add['application'] = [
-            'helper'       => $appName,
-            'label'        => 'Application',
-            'autocomplete' => [$appName],
-        ];
-        $add['repo_url'] = [
-            'helper'       => 'git@github.com:{user}/{repo}.git',
-            'label'        => 'Repository',
-            'autocomplete' => [
-                sprintf('git@github.com:chalasr/%s.git', $appName),
-                sprintf('git@git.sutunam.com:rchalas/%s.git', $appName),
-                sprintf('git@git.chaladev.fr:chalasr/%s.git', $appName),
-            ],
-        ];
-        $properties = $add + Yaml::parse(file_get_contents($this->bundleDir.'/Resources/config/setup_dialog.yml'));
+        $properties = array(
+            'application' => array(
+                'helper'       => $appName,
+                'label'        => 'Application',
+                'autocomplete' => [$appName],
+            ),
+            'repo_url'    => array(
+                'helper'       => 'git@github.com:{user}/{repo}.git',
+                'label'        => 'Repository',
+                'autocomplete' => [sprintf('git@github.com:chalasr/%s.git', $appName)],
+            ),
+        );
+        $properties += Yaml::parse(file_get_contents($this->getBundleDir() . '/Resources/config/setup_dialog.yml'));
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";
@@ -168,10 +159,10 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function checkComposer(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {
-        $question = new Question('<info>Download composer</info> [<comment>Y</comment>]: ', 'Y');
-        $question->setAutocompleterValues(['Y', 'N']);
+        $question = new Question('<info>Download composer</info> [<comment>yes</comment>]: ', 'yes');
+        $question->setAutocompleterValues(['yes', 'no']);
         $downloadComposer = $questionHelper->ask($input, $output, $question);
-        $deployData['composer'] = $downloadComposer == 'Y' ? true : false;
+        $deployData['composer'] = $downloadComposer == 'yes' ? true : false;
 
         return $deployData['composer'];
     }
@@ -188,10 +179,10 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function checkSchemaUpdate(InputInterface $input, OutputInterface $output, QuestionHelper $questionHelper, $deployData)
     {
-        $question = new Question('<info>Update database schema</info> [<comment>Y</comment>]: ', 'Y');
-        $question->setAutocompleterValues(['Y', 'N']);
+        $question = new Question('<info>Update database schema</info> [<comment>yes</comment>]: ', 'yes');
+        $question->setAutocompleterValues(['yes', 'no']);
         $wantDump = $questionHelper->ask($input, $output, $question);
-        $deployData['schemadb'] = $wantDump == 'Y' ? true : false;
+        $deployData['schemadb'] = $wantDump == 'yes' ? true : false;
 
         return $deployData['schemadb'];
     }

@@ -19,11 +19,6 @@ namespace RCH\CapistranoBundle\Generator;
 interface GeneratorInterface
 {
     /**
-     * Handles file generation.
-     */
-    public function generate();
-
-    /**
      * Opens an existing or newly created file.
      */
     public function open();

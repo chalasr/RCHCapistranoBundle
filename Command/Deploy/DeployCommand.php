@@ -12,6 +12,7 @@
 namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Util\OutputHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,6 +28,12 @@ use Symfony\Component\Yaml\Yaml;
  */
 class DeployCommand extends ContainerAwareCommand
 {
+    use OutputHelper;
+
+    /**
+     * {@inheritdoc}
+     * @return [type] [description]
+     */
     protected function configure()
     {
         $this
@@ -36,12 +43,21 @@ class DeployCommand extends ContainerAwareCommand
         ;
     }
 
+    /**
+     * Deploys application.
+     *
+     * @param  InputInterface  $input
+     * @param  OutputInterface $output
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $rootDir = $this->getContainer()->get('kernel')->getRootDir();
+        $rootDir = $this->getRootDir();
         $stagingName = $input->getOption('staging-name');
-        $stagingPath = $rootDir.'/../config/deploy/';
+        $stagingPath = $this->getCapistranoDir() . '/deploy/';
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
+
+        $this->sayWelcome($input, $output);
+
         if (false === file_exists($staging)) {
             $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
             if (false === file_exists($nonReadyStaging)) {
@@ -49,7 +65,7 @@ class DeployCommand extends ContainerAwareCommand
             }
             $params = Yaml::parse(file_get_contents($nonReadyStaging));
             $newStaging = new StagingGenerator($params, $stagingPath, $stagingName.'.rb');
-            $newStaging->generate();
+            $this->generate($newStaging);
         }
 
         $output->setVerbosity(10);

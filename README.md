@@ -86,6 +86,8 @@ $ app/console rch:deploy:setup
 
 Create YAML staging files  
 ```yaml
+# app/config/rch/staging/prod.yml
+
 domain: 'ssh_host'
 user: 'ssh_user'
 keys: '/home/ssh_user/.ssh/id_rsa'

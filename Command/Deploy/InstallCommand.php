@@ -11,6 +11,7 @@
 
 namespace RCH\CapistranoBundle\Command\Deploy;
 
+use RCH\CapistranoBundle\Util\OutputHelper;
 use RCH\CapistranoBundle\Generator\CapfileGenerator;
 use RCH\CapistranoBundle\Generator\GemfileGenerator;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -26,6 +27,8 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class InstallCommand extends ContainerAwareCommand
 {
+    use OutputHelper;
+
     /**
      * {@inheritdoc}
      */
@@ -33,7 +36,7 @@ class InstallCommand extends ContainerAwareCommand
     {
         $this
         ->setName('rch:deploy:install')
-        ->setDescription('Setup capistrano deployment configuration in interactive mode');
+        ->setDescription('Build installation files for capistrano requirements');
     }
 
     /**
@@ -42,32 +45,39 @@ class InstallCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $fs = new Filesystem();
-        $formatter = $this->getHelper('formatter');
-        $style = new OutputFormatterStyle('white', 'blue', array('bold'));
-        $output->getFormatter()->setStyle('title', $style);
-        $root = $this->getContainer()->get('kernel')->getRootDir();
+        $rootDir = $this->getRootDir();
+        $bundleConfigDir = $this->getPublishedConfigDir();
+        $capistranoDir = $this->getCapistranoDir();
 
-        $welcome = $formatter->formatBlock('Welcome to chalasr/capistrano', 'title', true);
-        $output->writeln(['', $welcome, '', 'This bundle provide automation for your deployment workflow, built on top of <comment>capistrano/symfony</comment> rubygem .', 'Created by Robin Chalas - github.com/chalasr']);
-        $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
+        $this->sayWelcome($input, $output);
 
-        if (false !== $fs->exists("{$root}/../config")) {
-            $fs->remove("{$root}/../config");
+        if (false === $fs->exists($bundleConfigDir)) {
+            $fs->mkdir(array(
+                $bundleConfigDir,
+                $bundleConfigDir . '/task',
+                $bundleConfigDir . '/staging',
+            ));
         }
+
+        // TODO: Generate Sample app/config/rch/tasks/sample-task.yml.dist
+        // TODO: Generate Sample app/config/rch/staging/sample-prod.yml.dist
+
+        if (true === $fs->exists($capistranoDir)) {
+            $fs->remove($capistranoDir);
+        }
+
+        $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
 
         $requirements = ['capistrano/setup', 'capistrano/deploy', 'capistrano/composer', 'capistrano/symfony'];
         $gems = ['capistrano', 'capistrano-symfony', 'capistrano-rbenv'];
-        $capfile = new CapfileGenerator($requirements, $root);
-        $gemfile = new GemfileGenerator($gems, $root);
-        $capfile->generate();
-        $gemfile->generate();
+        $capfile = new CapfileGenerator($requirements, $rootDir);
+        $gemfile = new GemfileGenerator($gems, $rootDir);
+        $this->generate($capfile);
+        $this->generate($gemfile);
 
         $output->writeln([
             '<info>Successfully generated </info><comment>Capfile</comment><info> and </info><comment>Gemfile</comment>',
             '',
         ]);
     }
-
-    // TODO: Generate Sample app/config/rch/tasks/sample-task.yml.dist
-    // TODO: Generate Sample app/config/rch/staging/sample-prod.yml.dist
 }
