@@ -2,14 +2,20 @@
 
 # RCH/CapistranoBundle
 
-Generates deployment workflows on top of capistrano.
+Make deployment a part of your development environment by
+- Setup a fast and automated deployment workflow
+- Create stagings in config format (YAML, PHP, XML)
+- Control execution order by namespaces
+- Add custom tasks and environment variables.
 
 Requirements
 ============
 
-- Symfony/Console >= 2.6
-- Symfony/Filesystem >= 2.6
-- Symfony/Yaml >= 2.6
+- Symfony/Console >= 2.5
+- Symfony/Filesystem >= 2.5
+- Symfony/Config >= 2.5
+- Symfony/Yaml >= 2.5
+- Symfony/Dependency-Injection >= 2.5
 - Ruby >= 2.0
 
 Installation
@@ -60,24 +66,38 @@ class AppKernel extends Kernel
 Step 3: Install Capistrano
 -------------------------
 
-Setup capistrano dependencies by creating a Gemfile and a Capfile :
-
+Build installation files for capistrano
+```bash
+$ app/console rch:deploy:install
 ```
-app/console rch:capistrano:install && bundle install
+
+Install dependencies
+```bash
+$ bundle install
 ```
 
 Usage
 ======
 
-```
-app/console rch:capistrano:setup
+Setup deployment configuration in interactive mode  
+```bash
+$ app/console rch:deploy:setup
 ```
 
-Deploy
-============
+Create YAML staging files  
+```yaml
+domain: 'ssh_host'
+user: 'ssh_user'
+keys: '/home/ssh_user/.ssh/id_rsa'
+forward_agent: 'false'
+auth_methods: 'publickey password'
+deploy_to: '/path/to/deploy'
 
 ```
-cap production deploy
+
+Start deployment  
+```bash
+$ app/console rch:deploy:run --staging-name=[STAGING-NAME]
 ```
 
 [Advanced usage](https://github.com/capistrano/capistrano#usage)
