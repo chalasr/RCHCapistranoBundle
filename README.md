@@ -2,7 +2,7 @@
 
 # RCH/CapistranoBundle
 
-Make deployment a part of your development environment by
+Make deployment a part of your development environment by :
 - Setup a fast and automated deployment workflow
 - Create stagings in config format (YAML, PHP, XML)
 - Control execution order by namespaces
@@ -65,6 +65,9 @@ class AppKernel extends Kernel
 
 Step 3: Install Capistrano
 -------------------------
+
+![](https://raw.githubusercontent.com/chalasr/CapistranoBundle/master/Resources/public/SCREENCAP.gif)
+
 
 Build installation files for capistrano
 ```bash
