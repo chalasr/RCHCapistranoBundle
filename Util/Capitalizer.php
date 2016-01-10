@@ -1,9 +1,23 @@
 <?php
 
-namespace RCH\CapistranoBundle\RCHCapistranoBundle\Util;
+/*
+* This file is part of RCH/CapistranoBundle.
+*
+* Robin Chalas <robin.chalas@gmail.com>
+*
+* For more informations about license, please see the LICENSE
+* file distributed in this source code.
+*/
+
+namespace RCH\CapistranoBundle\Util;
 
 use Symfony\Component\DependencyInjection\ContainerAware;
 
+/**
+ * Capitalizes strings corresponding to language.
+ *
+ * @author Robin Chalas <robin.chalas@gmail.com>
+ */
 class Capitalizer extends ContainerAware
 {
     /**
@@ -22,8 +36,8 @@ class Capitalizer extends ContainerAware
         }
 
         foreach ($base as $key => $val) {
-            unset($base[$k]);
-            $newKey = preg_replace_callback('/_([a-z])/', $callback, $k);
+            unset($base[$key]);
+            $newKey = preg_replace_callback('/_([a-z])/', $callback, $key);
             $base[$newKey] = $val;
         }
 
@@ -48,8 +62,8 @@ class Capitalizer extends ContainerAware
         }
 
         foreach ($base as $key => $val) {
-            unset($base[$k]);
-            $newKey = preg_replace_callback('/([A-Z])/', $callback, $k);
+            unset($base[$key]);
+            $newKey = preg_replace_callback('/([A-Z])/', $callback, $key);
             $base[$newKey] = $val;
         }
 

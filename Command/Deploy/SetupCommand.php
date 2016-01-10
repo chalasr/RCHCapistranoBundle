@@ -15,7 +15,6 @@ use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
 use RCH\CapistranoBundle\Util\OutputHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -45,7 +44,9 @@ class SetupCommand extends ContainerAwareCommand
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output) {}
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+    }
 
     /**
      * Configures deployment.
@@ -76,7 +77,7 @@ class SetupCommand extends ContainerAwareCommand
         $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
 
         $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
-        $staging = new StagingGenerator($sshProps, $this->getCapistranoDir() . '/deploy/');
+        $staging = new StagingGenerator($sshProps, $this->getCapistranoDir().'/deploy/');
         $this->generate($staging);
 
         return $output->writeln('<comment>Remote server successfully configured</comment>');
@@ -93,15 +94,15 @@ class SetupCommand extends ContainerAwareCommand
         $bundleDir = $this->getBundleDir();
         $path = $this->getCapistranoDir();
 
-        if (!$fs->exists($path . '/deploy.rb') || !$fs->exists($path . '/deploy/production.rb')) {
-            return $fs->mirror($bundleDir . '/Resources/config/capistrano', $path);
+        if (!$fs->exists($path.'/deploy.rb') || !$fs->exists($path.'/deploy/production.rb')) {
+            return $fs->mirror($bundleDir.'/Resources/config/capistrano', $path);
         }
 
-        $fs->remove($path . '/deploy.rb');
-        $fs->remove($path . '/deploy');
+        $fs->remove($path.'/deploy.rb');
+        $fs->remove($path.'/deploy');
         $fs->remove($path);
 
-        return $fs->mirror($bundleDir . '/Resources/config/capistrano', $path);
+        return $fs->mirror($bundleDir.'/Resources/config/capistrano', $path);
     }
 
     /**
@@ -129,7 +130,7 @@ class SetupCommand extends ContainerAwareCommand
                 'autocomplete' => [sprintf('git@github.com:chalasr/%s.git', $appName)],
             ),
         );
-        $properties += Yaml::parse(file_get_contents($this->getBundleDir() . '/Resources/config/setup_dialog.yml'));
+        $properties += Yaml::parse(file_get_contents($this->getBundleDir().'/Resources/config/setup_dialog.yml'));
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";

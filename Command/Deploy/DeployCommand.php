@@ -20,7 +20,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Yaml\Yaml;
 
-// TODO: Create a symfony process that take a staging name as argument & executes "$ cap <staging> deploy"
 /**
  * Deployment command.
  *
@@ -32,7 +31,6 @@ class DeployCommand extends ContainerAwareCommand
 
     /**
      * {@inheritdoc}
-     * @return [type] [description]
      */
     protected function configure()
     {
@@ -46,14 +44,15 @@ class DeployCommand extends ContainerAwareCommand
     /**
      * Deploys application.
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface  $input
+     * @param OutputInterface $output
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $rootDir = $this->getRootDir();
         $stagingName = $input->getOption('staging-name');
-        $stagingPath = $this->getCapistranoDir() . '/deploy/';
+        $stagingPath = $this->getCapistranoDir().'/deploy/';
+        $capitalizer = $this->getContainer()->get('rch_capistrano.capitalizer');
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
 
         $this->sayWelcome($input, $output);
@@ -64,6 +63,7 @@ class DeployCommand extends ContainerAwareCommand
                 return $output->writeln(sprintf('<error>Unable to find staging with name %s</error>', $stagingName));
             }
             $params = Yaml::parse(file_get_contents($nonReadyStaging));
+            $params = $capitalizer->camelize($params);
             $newStaging = new StagingGenerator($params, $stagingPath, $stagingName.'.rb');
             $this->generate($newStaging);
         }

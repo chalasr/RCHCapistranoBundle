@@ -11,9 +11,8 @@
 
 namespace RCH\CapistranoBundle\Util;
 
-use RCH\CapistranoBundle\Generator\Handler;
 use RCH\CapistranoBundle\Generator\AbstractGenerator;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use RCH\CapistranoBundle\Generator\Handler;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,12 +35,12 @@ trait OutputHelper
         $formatter = $this->getHelper('formatter');
         $style = new OutputFormatterStyle('white', 'blue', array('bold'));
         $output->getFormatter()->setStyle('title', $style);
-        $welcome = $formatter->formatBlock('Welcome to chalasr/capistrano', 'title', true);
+        $welcome = $formatter->formatBlock('Thank\'s to use RCHCapistranoBundle', 'title', true);
         $output->writeln(array(
             '',
             $welcome,
             '',
-            'Standardizes deployment as part of your development workflow, built on top of <comment>capistrano/symfony</comment> rubygem .',
+            'This bundle make deployment easier by automating use of <comment>capistrano/symfony</comment>',
             'Created by Robin Chalas - github.com/chalasr',
             '',
         ));
@@ -74,7 +73,7 @@ trait OutputHelper
      */
     public function getBundleDir()
     {
-        return $this->getRootDir() . '/../vendor/chalasr/capistrano-bundle/RCH/CapistranoBundle';
+        return $this->getRootDir().'/../vendor/chalasr/capistrano-bundle/RCH/CapistranoBundle';
     }
 
     /**
@@ -84,16 +83,16 @@ trait OutputHelper
      */
     public function getPublishedConfigDir()
     {
-        return $this->getRootdir() . '/config/rch';
+        return $this->getRootdir().'/config/rch';
     }
 
     /**
-     * Get published config directory.
+     * Get capistrano config directory.
      *
      * @return string
      */
     public function getCapistranoDir()
     {
-        return $this->getRootdir() . '/../config';
+        return $this->getRootdir().'/../config';
     }
 }

@@ -11,11 +11,10 @@
 
 namespace RCH\CapistranoBundle\Command\Deploy;
 
-use RCH\CapistranoBundle\Util\OutputHelper;
 use RCH\CapistranoBundle\Generator\CapfileGenerator;
 use RCH\CapistranoBundle\Generator\GemfileGenerator;
+use RCH\CapistranoBundle\Util\OutputHelper;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
@@ -44,23 +43,20 @@ class InstallCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $fs = new Filesystem();
         $rootDir = $this->getRootDir();
         $bundleConfigDir = $this->getPublishedConfigDir();
         $capistranoDir = $this->getCapistranoDir();
+        $fs = new Filesystem();
 
         $this->sayWelcome($input, $output);
 
         if (false === $fs->exists($bundleConfigDir)) {
             $fs->mkdir(array(
                 $bundleConfigDir,
-                $bundleConfigDir . '/task',
-                $bundleConfigDir . '/staging',
+                $bundleConfigDir.'/task',
+                $bundleConfigDir.'/staging',
             ));
         }
-
-        // TODO: Generate Sample app/config/rch/tasks/sample-task.yml.dist
-        // TODO: Generate Sample app/config/rch/staging/sample-prod.yml.dist
 
         if (true === $fs->exists($capistranoDir)) {
             $fs->remove($capistranoDir);

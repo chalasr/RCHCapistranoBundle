@@ -44,7 +44,7 @@ set(:deploy_to, '<deployTo>')";
     public function __construct(array $parameters, $path, $name = 'production.rb')
     {
         parent::__construct($parameters, $path, $name);
-        $this->path = $path . $name;
+        $this->path = $path.$name;
     }
 
     /**
