@@ -48,7 +48,7 @@ class InstallCommand extends ContainerAwareCommand
         $capistranoDir = $this->getCapistranoDir();
         $fs = new Filesystem();
 
-        $this->sayWelcome($input, $output);
+        $this->sayWelcome($output);
 
         if (false === $fs->exists($bundleConfigDir)) {
             $fs->mkdir(array(

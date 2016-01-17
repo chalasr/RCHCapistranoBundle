@@ -30,7 +30,7 @@ trait OutputHelper
      * @param InputInterface  $input
      * @param OutputInterface $output
      */
-    public function sayWelcome(InputInterface $input, OutputInterface $output)
+    public function sayWelcome(OutputInterface $output)
     {
         $formatter = $this->getHelper('formatter');
         $style = new OutputFormatterStyle('white', 'blue', array('bold'));
