@@ -12,7 +12,8 @@
 namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\StagingGenerator;
-use RCH\CapistranoBundle\Util\OutputHelper;
+use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
+use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -27,7 +28,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class DeployCommand extends ContainerAwareCommand
 {
-    use OutputHelper;
+    use OutputWritable, Localizable;
 
     /**
      * {@inheritdoc}

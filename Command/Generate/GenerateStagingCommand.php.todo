@@ -19,12 +19,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Filesystem\Filesystem;
 
-/** $ rch:generate:task **/
-class GenerateTaskCommand extends ContainerAwareCommand
+class GenerateStagingCommand extends ContainerAwareCommand
 {
-  /**
-   * TODO: ADD A "--source <{app/config/rch/tasks/}task.yml>" representing an YAML file containing an array of commands to execute
-   * TODO: ADD A "--staging-name " representing a staging located in <{app/config/rch/stagings/}staging.yml>
-   * {variable} = hidden
-   */
+/**
+ * ADD A "--source" option representing an YAML staging and convert it using StagingGenerator
+ */
 }

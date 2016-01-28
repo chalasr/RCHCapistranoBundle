@@ -11,14 +11,12 @@
 
 namespace RCH\CapistranoBundle\Util;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-
 /**
  * Capitalizes strings corresponding to language.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class Capitalizer extends ContainerAware
+trait Capitalizer
 {
     /**
      * Convert strings from under_scores to CamelCase.

@@ -13,7 +13,8 @@ namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
-use RCH\CapistranoBundle\Util\OutputHelper;
+use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
+use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
@@ -29,7 +30,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SetupCommand extends ContainerAwareCommand
 {
-    use OutputHelper;
+    use OutputWritable, Localizable;
 
     /**
      * {@inheritdoc}
