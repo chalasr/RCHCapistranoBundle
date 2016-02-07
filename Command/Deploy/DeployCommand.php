@@ -56,7 +56,7 @@ class DeployCommand extends ContainerAwareCommand
         $capitalizer = $this->getContainer()->get('rch_capistrano.capitalizer');
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
 
-        $this->sayWelcome($input, $output);
+        $this->sayWelcome($output);
 
         if (false === file_exists($staging)) {
             $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);

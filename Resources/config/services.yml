@@ -1,7 +1,6 @@
 parameters:
     rch_capistrano.capitalizer.class: RCH\CapistranoBundle\Util\Capitalizer
+    
 services:
     rch_capistrano.capitalizer:
         class: "%rch_capistrano.capitalizer.class%"
-        calls:
-            - [ setContainer,[ @service_container ] ]
