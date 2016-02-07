@@ -16,7 +16,7 @@ namespace RCH\CapistranoBundle\Util;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-trait Capitalizer
+class Capitalizer
 {
     /**
      * Convert strings from under_scores to CamelCase.

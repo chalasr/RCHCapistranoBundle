@@ -21,8 +21,9 @@ class Handler
     protected $generator;
 
     /**
-     * @param Source\SourceIteratorInterface $source
-     * @param Writer\WriterInterface         $writer
+     * Constructor.
+     *
+     * @param GeneratorInterface $generator
      */
     public function __construct(GeneratorInterface $generator)
     {
@@ -42,8 +43,7 @@ class Handler
     /**
      * @static
      *
-     * @param Source\SourceIteratorInterface $source
-     * @param Writer\WriterInterface         $writer
+     * @param GeneratorInterface $generator
      *
      * @return Handler
      */
