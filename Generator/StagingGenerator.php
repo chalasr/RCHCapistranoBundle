@@ -26,10 +26,10 @@ class StagingGenerator extends AbstractGenerator
 server '<domain>',
 user: '<user>',
 ssh_options: {
-		user: '<user>',
-		keys: %w(<keys>),
-		forward_agent: <forwardAgent>,
-		auth_methods: %w(<authMethods>),
+    user: '<user>',
+    keys: %w(<keys>),
+    forward_agent: <forwardAgent>,
+    auth_methods: %w(<authMethods>),
 }
 
 set(:deploy_to, '<deployTo>')";
@@ -44,6 +44,7 @@ set(:deploy_to, '<deployTo>')";
     public function __construct(array $parameters, $path, $name = 'production.rb')
     {
         parent::__construct($parameters, $path, $name);
+
         $this->path = $path.$name;
     }
 
@@ -60,6 +61,7 @@ set(:deploy_to, '<deployTo>')";
         }
 
         $content = str_replace($placeHolders, $replacements, self::$template);
+
         fwrite($this->file, $this->addHeaders($content));
     }
 }
