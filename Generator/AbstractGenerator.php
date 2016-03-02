@@ -70,6 +70,10 @@ abstract class AbstractGenerator implements GeneratorInterface
      */
     public function open()
     {
+        if (!is_dir($directory = dirname($this->path))) {
+            mkdir($directory, 0755);
+        }
+
         $this->file = fopen($this->path, 'w');
     }
 

@@ -12,7 +12,7 @@
 namespace RCH\CapistranoBundle\Generator;
 
 /**
- * Generates stagings for capistrano.
+ * Generates Capfile for capistrano.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
