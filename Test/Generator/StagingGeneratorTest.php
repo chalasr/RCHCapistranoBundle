@@ -2,7 +2,6 @@
 
 namespace RCH\CapistranoBundle\Test\Generator;
 
-use RCH\CapistranoBundle\Generator\Handler;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
 
 /**
@@ -42,7 +41,7 @@ set(:deploy_to, '/var/www/html')";
 
     public function setUp()
     {
-        $this->path = __DIR__.'/stagings/';
+        $this->path = sys_get_temp_dir().'/stagings/';
         $this->params = array(
             'domain' => 'rch.fr',
             'user' => 'chalasr',
@@ -66,5 +65,6 @@ set(:deploy_to, '/var/www/html')";
     public function tearDown()
     {
         unlink($this->path.'test.rb');
+        rmdir($this->path);
     }
 }

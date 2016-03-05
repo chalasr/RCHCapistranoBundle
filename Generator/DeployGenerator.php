@@ -12,7 +12,7 @@
 namespace RCH\CapistranoBundle\Generator;
 
 /**
- * Generates stagings.
+ * Generates deploy.rb file.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
