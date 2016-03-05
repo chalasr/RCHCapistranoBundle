@@ -8,16 +8,16 @@
         {
             "name": "Robin CHALAS",
             "email": "robin.chalas@gmail.com",
-            "homepage": "https://github.com/chalasr/CapistranoBundle"
+            "homepage": "https://github.com/chalasr/RCHCapistranoBundle"
         }
     ],
     "require": {
         "php": ">=5.3.9",
-        "symfony/console": ">=2.5",
-        "symfony/filesystem": ">=2.5",
-        "symfony/yaml": ">=2.5",
-        "symfony/dependency-injection": ">=2.5",
-        "symfony/config": ">=2.5"
+        "symfony/console": "~2.4|~3.0",
+        "symfony/filesystem": "~2.4|~3.0",
+        "symfony/yaml": "~2.4|~3.0",
+        "symfony/dependency-injection": "~2.4|~3.0",
+        "symfony/config": "~2.4|~3.0"
     },
     "autoload":     {
         "psr-0": { "RCH\\CapistranoBundle": "" }
