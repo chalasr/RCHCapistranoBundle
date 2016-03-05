@@ -60,24 +60,32 @@ class DeployCommand extends ContainerAwareCommand
 
         if (false === file_exists($staging)) {
             $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
+
             if (false === file_exists($nonReadyStaging)) {
                 return $output->writeln(sprintf('<error>Unable to find staging with name %s</error>', $stagingName));
             }
+
             $params = Yaml::parse(file_get_contents($nonReadyStaging));
             $params = $capitalizer->camelize($params);
-            $newStaging = new StagingGenerator($params, $stagingPath, $stagingName.'.rb');
-            $this->generate($newStaging);
+            $generator = new StagingGenerator($params, $stagingPath, $stagingName.'.rb');
+
+            $generate = function () use ($generator) {
+                $handler = Handler::create($generator);
+                $handler->generate();
+            };
         }
 
         $output->setVerbosity(10);
         $builder = new ProcessBuilder(['cap', $stagingName, 'deploy']);
         $builder->setTimeout(null);
         $process = $builder->getProcess();
+
         $process->run(function ($type, $buffer) use ($output) {
             if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
                 $output->write($buffer);
             }
         });
+
         if (!$process->isSuccessful()) {
             $output->writeln('<error>Deployment failed</error>');
 
