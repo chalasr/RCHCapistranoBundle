@@ -1,5 +1,5 @@
 {
-    "name": "chalasr/capistrano-bundle",
+    "name": "rch/capistrano-bundle",
     "description": "Symfony/console command that provide automation of your deployment workflow on top of Capistrano.",
     "keywords": ["deploy", "bundle", "symfony2", "capistrano", "capifony", "production", "workflow"],
     "type": "symfony-bundle",

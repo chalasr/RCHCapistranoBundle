@@ -43,12 +43,12 @@ set(:deploy_to, '/var/www/html')";
     {
         $this->path = sys_get_temp_dir().'/stagings/';
         $this->params = array(
-            'domain' => 'rch.fr',
-            'user' => 'chalasr',
-            'keys' => '/home/ssh_user/.ssh/id_rsa',
+            'domain'       => 'rch.fr',
+            'user'         => 'chalasr',
+            'keys'         => '/home/ssh_user/.ssh/id_rsa',
             'forwardAgent' => 'false',
-            'authMethods' => 'publickey password',
-            'deployTo' => '/var/www/html',
+            'authMethods'  => 'publickey password',
+            'deployTo'     => '/var/www/html',
         );
     }
 
