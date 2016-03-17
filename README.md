@@ -110,7 +110,7 @@ $ app/console rch:deploy:run --staging-name=[STAGING-NAME]
 Credits
 =======
 
-[Robin Chalas](https:/github.com/chalasr)  
+[Robin Chalas](https://github.com/chalasr)  
 [robin.chalas@gmail.com](mailto:robin.chalas@gmail.com)
 
 License
