@@ -78,11 +78,6 @@ abstract class AbstractGenerator implements GeneratorInterface
     }
 
     /**
-     * Writes in file.
-     */
-    abstract public function write();
-
-    /**
      * Close generated file.
      */
     public function close()

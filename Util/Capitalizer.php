@@ -49,7 +49,7 @@ class Capitalizer
      *
      * @return mixed
      */
-    public function underscorize($base)
+    public function uncamelize($base)
     {
         $callback = create_function('$c', 'return "_" . strtolower($c[1]);');
 
