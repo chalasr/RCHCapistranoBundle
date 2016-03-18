@@ -21,7 +21,9 @@ class GemfileGenerator extends AbstractGenerator
     /**
      * @var string
      */
-    protected static $template = "gem '<gem>'";
+    protected static $template = "gem <gem>";
+
+    private static $sourceTemplate = PHP_EOL."source 'https://rubygems.org'";
 
     /**
      * Constructor.
@@ -47,6 +49,16 @@ class GemfileGenerator extends AbstractGenerator
             $gemfile = sprintf('%s%s%s', $gemfile, PHP_EOL, $line);
         }
 
+        $this->addSource($gemfile);
+
         fwrite($this->file, $this->addHeaders($gemfile));
+    }
+
+    /**
+     * Writes the gems source.
+     */
+    private function addSource(&$gemfile)
+    {
+        $gemfile = sprintf('%s%s%s',  $gemfile, PHP_EOL, self::$sourceTemplate);
     }
 }
