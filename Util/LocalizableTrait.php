@@ -35,7 +35,7 @@ trait LocalizableTrait
      */
     public function getBundleDir()
     {
-        return $this->getRootDir().'/../vendor/chalasr/capistrano-bundle/RCH/CapistranoBundle';
+        return $this->getRootDir().'/../vendor/rch/capistrano-bundle/RCH/CapistranoBundle';
     }
 
     /**
