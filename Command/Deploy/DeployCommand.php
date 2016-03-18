@@ -56,6 +56,7 @@ class DeployCommand extends ContainerAwareCommand
         $capitalizer = $this->getContainer()->get('rch_capistrano.capitalizer');
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
 
+        $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         $this->sayWelcome($output);
 
         if (false === file_exists($staging)) {
@@ -75,15 +76,12 @@ class DeployCommand extends ContainerAwareCommand
             };
         }
 
-        $output->setVerbosity(10);
         $builder = new ProcessBuilder(['cap', $stagingName, 'deploy']);
         $builder->setTimeout(null);
         $process = $builder->getProcess();
 
         $process->run(function ($type, $buffer) use ($output) {
-            if (OutputInterface::VERBOSITY_VERBOSE <= $output->getVerbosity()) {
-                $output->write($buffer);
-            }
+            $output->write(sprintf('<info>%s</info>', $buffer));
         });
 
         if (!$process->isSuccessful()) {
