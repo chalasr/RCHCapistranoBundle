@@ -85,13 +85,18 @@ class DeployCommand extends ContainerAwareCommand
         });
 
         if (!$process->isSuccessful()) {
+            $output->writeln(PHP_EOL);
             $output->writeln('<error>Deployment failed</error>');
+            $output->writeln(
+                sprintf('<error>Execute <comment>cap %s deploy --trace</comment> for more details</error>', $stagingName)
+            );
 
-            if (OutputInterface::VERBOSITY_VERBOSE > $output->getVerbosity()) {
-                $output->writeln('<error>Run the command with -v option for more details</error>');
-            }
+            return $process->getExitCode();
         }
 
-        return $process->getExitCode();
+        return $output->writeln(
+            '<info>Project successfully deployed !</info>'
+        );
+
     }
 }

@@ -14,12 +14,9 @@ Make deployment a part of your development environment by :
 Requirements
 ============
 
-- Symfony/Console >= 2.5
-- Symfony/Filesystem >= 2.5
-- Symfony/Config >= 2.5
-- Symfony/Yaml >= 2.5
-- Symfony/Dependency-Injection >= 2.5
-- Ruby >= 2.0
+- Symfony ~2.4
+- Ruby ~2.0
+- Capistrano ~3.0
 
 Installation
 ============
@@ -45,25 +42,14 @@ Then, enable the bundle by adding it to the list of registered bundles
 in the `app/AppKernel.php` file of your project:
 
 ```php
-<?php
+
 // app/AppKernel.php
 
-// ...
-class AppKernel extends Kernel
-{
-    public function registerBundles()
-    {
-        $bundles = array(
-            // ...
-
-            new RCH\CapistranoBundle\RCHCapistranoBundle(),
-        );
-
-        // ...
-    }
-
+$bundles = array(
     // ...
-}
+
+    new RCH\CapistranoBundle\RCHCapistranoBundle(),
+);
 ```
 
 Step 3: Install Capistrano
@@ -87,10 +73,8 @@ Setup deployment configuration in interactive mode
 $ app/console rch:deploy:setup
 ```
 
-Create YAML staging files  
+Create YAML stagings  
 ```yaml
-# app/config/rch/staging/prod.yml
-
 domain: 'ssh_host'
 user: 'ssh_user'
 keys: '/home/ssh_user/.ssh/id_rsa'
