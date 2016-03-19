@@ -76,7 +76,7 @@ class RunCommand extends ContainerAwareCommand
             };
         }
 
-        $builder = new ProcessBuilder(['cap', $stagingName, 'deploy']);
+        $builder = new ProcessBuilder(['bundle', 'exec', 'cap', $stagingName, 'deploy']);
         $builder->setTimeout(null);
         $process = $builder->getProcess();
 
