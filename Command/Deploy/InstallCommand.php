@@ -66,7 +66,7 @@ class InstallCommand extends ContainerAwareCommand
         $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
 
         $requirements = ['capistrano/setup', 'capistrano/deploy', 'capistrano/composer', 'capistrano/symfony'];
-        $gems = ["'capistrano', '~> 1.0.0.rc1'", "capistrano-symfony', '~> 1.0.0.rc1'", 'capistrano-rbenv'];
+        $gems = ['capistrano', 'capistrano-symfony', 'capistrano-rbenv'];
         $capfile = new CapfileGenerator($requirements, $rootDir);
         $gemfile = new GemfileGenerator($gems, $rootDir);
         $this->generate($capfile);
