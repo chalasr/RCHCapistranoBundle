@@ -45,7 +45,7 @@ set(:deploy_to, '<deployTo>')";
     {
         parent::__construct($parameters, $path, $name);
 
-        $this->path = $path.$name;
+        $this->path = sprintf('%s%s.rb', $path, $name);
     }
 
     /**
