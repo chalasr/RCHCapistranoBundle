@@ -26,7 +26,7 @@ use Symfony\Component\Yaml\Yaml;
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class DeployCommand extends ContainerAwareCommand
+class RunCommand extends ContainerAwareCommand
 {
     use OutputWritable, Localizable;
 
@@ -76,7 +76,7 @@ class DeployCommand extends ContainerAwareCommand
             };
         }
 
-        $builder = new ProcessBuilder(['cap', $stagingName, 'deploy']);
+        $builder = new ProcessBuilder(['bundle', 'exec', 'cap', $stagingName, 'deploy']);
         $builder->setTimeout(null);
         $process = $builder->getProcess();
 
@@ -97,6 +97,5 @@ class DeployCommand extends ContainerAwareCommand
         return $output->writeln(
             '<info>Project successfully deployed !</info>'
         );
-
     }
 }
