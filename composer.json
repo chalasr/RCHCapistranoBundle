@@ -20,7 +20,7 @@
         "symfony/config": "~3.0"
     },
     "autoload":     {
-        "psr-4": { "RCH\\CapistranoBundle\\": "" }
+        "psr-0": { "RCH\\CapistranoBundle\\": "" }
     },
     "target-dir": "RCH/CapistranoBundle",
     "require-dev": {
