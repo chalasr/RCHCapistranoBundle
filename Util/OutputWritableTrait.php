@@ -39,7 +39,7 @@ trait OutputWritableTrait
             $breakline,
             $title,
             $breakline,
-            'This bundle make deployment easier by automating use of <comment>capistrano/symfony</comment>',
+            'This bundle makes deployment easier by automating use of <comment>capistrano/symfony</comment>',
             'Created by Robin Chalas - github.com/chalasr',
             $breakline,
         );

@@ -21,7 +21,7 @@ class GemfileGenerator extends AbstractGenerator
     /**
      * @var string
      */
-    protected static $template = "gem <gem>";
+    protected static $template = 'gem <gem>';
 
     private static $sourceTemplate = PHP_EOL."source 'https://rubygems.org'";
 

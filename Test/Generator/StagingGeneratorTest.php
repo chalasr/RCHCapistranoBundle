@@ -14,6 +14,9 @@ class StagingGeneratorTest extends \PHPUnit_Framework_TestCase
     /** @var string */
     protected $path;
 
+    /** @var string */
+    protected $name;
+
     /** @var array */
     protected $params;
 
@@ -42,6 +45,7 @@ set(:deploy_to, '/var/www/html')";
     public function setUp()
     {
         $this->path = sys_get_temp_dir().'/stagings/';
+        $this->name = 'test';
         $this->params = array(
             'domain'       => 'rch.fr',
             'user'         => 'chalasr',
@@ -54,17 +58,17 @@ set(:deploy_to, '/var/www/html')";
 
     public function testGenerate()
     {
-        $generator = new StagingGenerator($this->params, $this->path, 'test.rb');
+        $generator = new StagingGenerator($this->params, $this->path, $this->name);
         $generator->open();
         $generator->write();
         $generator->close();
 
-        $this->assertEquals($this->expected, file_get_contents($this->path.'test.rb'));
+        $this->assertEquals($this->expected, file_get_contents(sprintf('%s%s.rb', $this->path, $this->name)));
     }
 
     public function tearDown()
     {
-        unlink($this->path.'test.rb');
+        unlink(sprintf('%s%s.rb', $this->path, $this->name));
         rmdir($this->path);
     }
 }
