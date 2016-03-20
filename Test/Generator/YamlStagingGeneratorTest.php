@@ -43,7 +43,7 @@ class YamlStagingGeneratorTest extends \PHPUnit_Framework_TestCase
 domain: 'rch.fr'
 user: 'chalasr'
 keys: '/home/ssh_user/.ssh/id_rsa'
-forward_agent: 'false'
+forward_agent: false
 auth_methods: 'publickey password'
 deploy_to: '/var/www/html'
 ";
@@ -67,7 +67,7 @@ deploy_to: '/var/www/html'
         $generator = new YamlStagingGenerator($this->params, $this->path, $this->name);
         $this->generateStaging($generator);
 
-        $this->assertEquals($this->expected, file_get_contents(sprintf('%s%s.yml', $this->path, $this->name)));
+        $this->assertEquals($this->expected, file_get_contents(sprintf('%s/%s.yml', $this->path, $this->name)));
     }
 
     private function generateStaging(GeneratorInterface $generator)
@@ -79,7 +79,7 @@ deploy_to: '/var/www/html'
 
     public function tearDown()
     {
-        unlink(sprintf('%s%s.yml', $this->path, $this->name));
+        unlink(sprintf('%s/%s.yml', $this->path, $this->name));
         rmdir($this->path);
     }
 }

@@ -71,7 +71,7 @@ set(:deploy_to, '/var/www/html')
         $generator = new StagingGenerator($this->params, $this->path, $this->name);
         $this->generateStaging($generator);
 
-        $this->assertEquals($this->expected, file_get_contents(sprintf('%s%s.rb', $this->path, $this->name)));
+        $this->assertEquals($this->expected, file_get_contents(sprintf('%s/%s.rb', $this->path, $this->name)));
     }
 
     private function generateStaging(GeneratorInterface $generator)
@@ -83,7 +83,7 @@ set(:deploy_to, '/var/www/html')
 
     public function tearDown()
     {
-        unlink(sprintf('%s%s.rb', $this->path, $this->name));
+        unlink(sprintf('%s/%s.rb', $this->path, $this->name));
         rmdir($this->path);
     }
 }

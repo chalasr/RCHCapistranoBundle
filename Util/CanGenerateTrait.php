@@ -13,6 +13,7 @@ namespace RCH\CapistranoBundle\Util;
 
 use RCH\CapistranoBundle\Generator\GeneratorInterface;
 use RCH\CapistranoBundle\Generator\Handler;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Provides helper methods.
@@ -59,12 +60,7 @@ trait CanGenerateTrait
      */
     public function parseYamlStaging($yamlFile)
     {
-        if (property_exists(get_class($this), 'container')) {
-            $container = $this->container;
-        } else {
-            $container = $this->getContainer();
-        }
-
+        $container = $this->container ?: $this->getContainer();
         $capitalizer = $container->get('rch_capistrano.capitalizer');
         $params = Yaml::parse(file_get_contents($yamlFile));
 

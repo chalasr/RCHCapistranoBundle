@@ -63,7 +63,7 @@ class RunCommand extends ContainerAwareCommand
             $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
 
             if (false === file_exists($nonReadyStaging)) {
-                return $output->writeln(sprintf('<error>Unable to find staging with name %s</error>', $stagingName));
+                throw new InvalidArgumentException(sprintf('Unable to find staging with name %s', $stagingName));
             }
 
             $params = $this->parseYamlStaging($nonReadyStaging);

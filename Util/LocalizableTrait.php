@@ -11,6 +11,8 @@
 
 namespace RCH\CapistranoBundle\Util;
 
+use Symfony\Component\Console\Exception\RuntimeException;
+
 /**
  * Retrieves directories absolute paths.
  *
@@ -56,5 +58,43 @@ trait LocalizableTrait
     public function getCapistranoDir()
     {
         return $this->getRootdir().'/../config';
+    }
+
+    /**
+     * Get capistrano config directory.
+     *
+     * @return string
+     */
+    public function getCapistranoDeployDir()
+    {
+        return $this->getCapistranoDir().'/deploy';
+    }
+
+    /**
+     * Get staging's configuration directory (Yaml).
+     *
+     * @return string
+     */
+    public function getStagingsConfigDir()
+    {
+        return $this->getPublishedConfigDir().'/staging';
+    }
+
+    /**
+     * Get the Service Container.
+     *
+     * @return \Symfony\Component\DependencyInjection\ContainerInterface
+     *
+     * @throws RuntimeException If the service container is not accessible
+     */
+    public function getContainer()
+    {
+        if (property_exists(__CLASS__, 'container')) {
+            return $this->container;
+        } else {
+            return parent::getContainer();
+        }
+
+        throw new RuntimeException(sprintf('The service container must be accessible from class %s to use this trait', __CLASS__));
     }
 }
