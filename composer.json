@@ -20,7 +20,7 @@
         "symfony/config": "~3.0"
     },
     "autoload":     {
-        "psr-0": { "RCH\\CapistranoBundle\\": "" }
+        "psr-4": { "RCH\\CapistranoBundle\\": "" }
     },
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.11"
