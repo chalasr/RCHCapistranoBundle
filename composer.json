@@ -22,7 +22,6 @@
     "autoload":     {
         "psr-4": { "RCH\\CapistranoBundle\\": "" }
     },
-    "target-dir": "RCH/CapistranoBundle",
     "require-dev": {
         "fabpot/php-cs-fixer": "^1.11"
     },

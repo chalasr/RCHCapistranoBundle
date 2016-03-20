@@ -1,18 +1,16 @@
 <?php
 
-/*
-* This file is part of RCH/CapistranoBundle.
-*
-* Robin Chalas <robin.chalas@gmail.com>
-*
-* For more informations about license, please see the LICENSE
-* file distributed in this source code.
-*/
+/**
+ * This file is part of RCH/CapistranoBundle.
+ *
+ * Robin Chalas <robin.chalas@gmail.com>
+ *
+ * For more informations about license, please see the LICENSE
+ * file distributed in this source code.
+ */
 
 namespace RCH\CapistranoBundle\Util;
 
-use RCH\CapistranoBundle\Generator\AbstractGenerator;
-use RCH\CapistranoBundle\Generator\Handler;
 use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -68,22 +66,5 @@ trait OutputWritableTrait
         $title = $formatter->formatBlock($content, 'title', true);
 
         return $title;
-    }
-
-    /**
-     * Generates a document from given configuration using given generator.
-     *
-     * @param AbstractGenerator $generator Instance of AbstractGeneratord
-     *
-     * @return callable The generation callback
-     */
-    public function generate(AbstractGenerator $generator)
-    {
-        $callback = function () use ($generator) {
-            $handler = Handler::create($generator);
-            $handler->generate();
-        };
-
-        return $callback();
     }
 }

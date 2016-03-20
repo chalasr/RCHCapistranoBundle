@@ -1,19 +1,21 @@
 <?php
 
-/*
-* This file is part of RCH/CapistranoBundle.
-*
-* Robin Chalas <robin.chalas@gmail.com>
-*
-* For more informations about license, please see the LICENSE
-* file distributed in this source code.
-*/
+/**
+ * This file is part of RCH/CapistranoBundle.
+ *
+ * Robin Chalas <robin.chalas@gmail.com>
+ *
+ * For more informations about license, please see the LICENSE
+ * file distributed in this source code.
+ */
 
 namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Generator\YamlStagingGenerator;
 use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
+use RCH\CapistranoBundle\Util\CanGenerateTrait as CanGenerate;
 use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -30,7 +32,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SetupCommand extends ContainerAwareCommand
 {
-    use OutputWritable, Localizable;
+    use OutputWritable, Localizable, CanGenerate;
 
     /**
      * {@inheritdoc}
@@ -78,8 +80,10 @@ class SetupCommand extends ContainerAwareCommand
         $output->writeln([$formatter->formatSection('PRODUCTION', 'Remote server / SSH settings'), '']);
 
         $sshProps = $this->configureSSH($input, $output, $questionHelper, $deployData);
-        $staging = new StagingGenerator($sshProps, $this->getCapistranoDir().'/deploy/');
-        $this->generate($staging);
+        $staging = new StagingGenerator($sshProps, $this->getCapistranoDeployDir());
+        $yamlStaging = new YamlStagingGenerator($sshProps, $this->getStagingsConfigDir());
+
+        $this->generateMany([$staging, $yamlStaging]);
 
         return $output->writeln('<comment>Remote server successfully configured</comment>');
     }
@@ -234,9 +238,11 @@ class SetupCommand extends ContainerAwareCommand
 
         foreach ($sshOptions as $key => $property) {
             $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
+
             if (isset($property['autocomplete'])) {
                 $question->setAutocompleterValues($property['autocomplete']);
             }
+
             $sshProps[$key] = $questionHelper->ask($input, $output, $question);
         }
 
