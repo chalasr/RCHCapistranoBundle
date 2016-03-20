@@ -12,26 +12,22 @@
 namespace RCH\CapistranoBundle\Generator;
 
 /**
- * Generates stagings for capistrano.
+ * Generates staging's configuration in YAML, used as source for build real '.rb' staging.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class StagingGenerator extends AbstractGenerator
+class YamlStagingGenerator extends AbstractGenerator
 {
     /**
      * @var string
      */
     protected static $template =
-"server '<domain>',
-user: '<user>',
-ssh_options: {
-    user: '<user>',
-    keys: %w(<keys>),
-    forward_agent: <forwardAgent>,
-    auth_methods: %w(<authMethods>),
-}
-
-set(:deploy_to, '<deployTo>')
+"domain: '<domain>'
+user: '<user>'
+keys: '<keys>'
+forward_agent: <forwardAgent>
+auth_methods: '<authMethods>'
+deploy_to: '<deployTo>'
 ";
 
     /**
@@ -45,7 +41,7 @@ set(:deploy_to, '<deployTo>')
     {
         parent::__construct($parameters, $path, $name);
 
-        $this->path = sprintf('%s/%s.rb', $path, $name);
+        $this->path = sprintf('%s/%s.yml', $path, $name);
     }
 
     /**

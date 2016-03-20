@@ -1,17 +1,18 @@
 <?php
 
-/*
-* This file is part of RCH/CapistranoBundle.
-*
-* Robin Chalas <robin.chalas@gmail.com>
-*
-* For more informations about license, please see the LICENSE
-* file distributed in this source code.
-*/
+/**
+ * This file is part of RCH/CapistranoBundle.
+ *
+ * Robin Chalas <robin.chalas@gmail.com>
+ *
+ * For more informations about license, please see the LICENSE
+ * file distributed in this source code.
+ */
 
 namespace RCH\CapistranoBundle\Command\Deploy;
 
 use RCH\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Util\CanGenerateTrait as CanGenerate;
 use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
 use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
@@ -19,7 +20,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\ProcessBuilder;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Deployment command.
@@ -28,7 +28,7 @@ use Symfony\Component\Yaml\Yaml;
  */
 class RunCommand extends ContainerAwareCommand
 {
-    use OutputWritable, Localizable;
+    use OutputWritable, Localizable, CanGenerate;
 
     /**
      * {@inheritdoc}
@@ -63,17 +63,13 @@ class RunCommand extends ContainerAwareCommand
             $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
 
             if (false === file_exists($nonReadyStaging)) {
-                return $output->writeln(sprintf('<error>Unable to find staging with name %s</error>', $stagingName));
+                throw new InvalidArgumentException(sprintf('Unable to find staging with name %s', $stagingName));
             }
 
-            $params = Yaml::parse(file_get_contents($nonReadyStaging));
-            $params = $capitalizer->camelize($params);
-            $generator = new StagingGenerator($params, $stagingPath, $stagingName.'.rb');
+            $params = $this->parseYamlStaging($nonReadyStaging);
+            $generator = new StagingGenerator($params, $stagingPath, $stagingName);
 
-            $generate = function () use ($generator) {
-                $handler = Handler::create($generator);
-                $handler->generate();
-            };
+            $this->generate($generator);
         }
 
         $builder = new ProcessBuilder(['bundle', 'exec', 'cap', $stagingName, 'deploy']);
