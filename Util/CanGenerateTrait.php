@@ -60,7 +60,7 @@ trait CanGenerateTrait
      */
     public function parseYamlStaging($yamlFile)
     {
-        $container = $this->container ?: $this->getContainer();
+        $container = !(property_exists(get_called_class(), 'container')) ? $this->getContainer() : $this->container;
         $capitalizer = $container->get('rch_capistrano.capitalizer');
         $params = Yaml::parse(file_get_contents($yamlFile));
 
