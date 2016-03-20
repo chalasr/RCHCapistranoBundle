@@ -106,7 +106,7 @@ Contributing
 ============
 
 This bundle needs help!
-For the contribution guidelines, see the [CONTRIBUTING.md(CONTRIBUTING.md)] distributed file.
+For the contribution guidelines, see the [CONTRIBUTING.md](CONTRIBUTING.md) distributed file.
 
 Todo
 -----
