@@ -11,27 +11,27 @@
 
 namespace RCH\CapistranoBundle\Generator;
 
+use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
+
 /**
- * Generates stagings for capistrano.
+ * Generates staging's configuration in YAML, used as source for build real '.rb' staging.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class StagingGenerator extends AbstractGenerator
+class YamlStagingGenerator extends AbstractGenerator
 {
+    use Localizable;
+
     /**
      * @var string
      */
     protected static $template =
-"server '<domain>',
-user: '<user>',
-ssh_options: {
-    user: '<user>',
-    keys: %w(<keys>),
-    forward_agent: <forwardAgent>,
-    auth_methods: %w(<authMethods>),
-}
-
-set(:deploy_to, '<deployTo>')
+"domain: '<domain>'
+user: '<user>'
+keys: '<keys>'
+forward_agent: '<forwardAgent>'
+auth_methods: '<authMethods>'
+deploy_to: '<deployTo>'
 ";
 
     /**
@@ -41,11 +41,15 @@ set(:deploy_to, '<deployTo>')
      * @param string $path
      * @param string $name
      */
-    public function __construct(array $parameters, $path, $name = 'production')
+    public function __construct(array $parameters, $path = null, $name = 'production')
     {
         parent::__construct($parameters, $path, $name);
 
-        $this->path = sprintf('%s%s.rb', $path, $name);
+        if (!$path) {
+            $path = $this->getPublishedConfigDir().'/staging/';
+        }
+
+        $this->path = sprintf('%s%s.yml', $path, $name);
     }
 
     /**

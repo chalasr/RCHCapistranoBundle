@@ -1,13 +1,13 @@
 <?php
 
-/*
-* This file is part of RCH/CapistranoBundle.
-*
-* Robin Chalas <robin.chalas@gmail.com>
-*
-* For more informations about license, please see the LICENSE
-* file distributed in this source code.
-*/
+/**
+ * This file is part of RCH/CapistranoBundle.
+ *
+ * Robin Chalas <robin.chalas@gmail.com>
+ *
+ * For more informations about license, please see the LICENSE
+ * file distributed in this source code.
+ */
 
 namespace RCH\CapistranoBundle\DependencyInjection;
 

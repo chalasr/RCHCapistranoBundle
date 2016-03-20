@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/chalasr/RCHCapistranoBundle.svg?branch=master)](https://travis-ci.org/chalasr/RCHCapistranoBundle)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74/mini.png)](https://insight.sensiolabs.com/projects/a1b5a249-e656-4a0f-af57-77f8f84f2e74)
 
-![](https://raw.githubusercontent.com/chalasr/CapistranoBundle/master/Resources/doc/SCREENCAST.gif)
+![](Resources/doc/SCREENCAST.gif)
 
 Integrates deployment as part of your development environment.
 
@@ -101,6 +101,21 @@ Advanced usage
 ===============
 
 Look at [the capistrano documentation](https://github.com/capistrano/capistrano#usage).
+
+Contributing
+============
+
+This bundle needs help!
+For the contribution guidelines, see the [CONTRIBUTING.md(CONTRIBUTING.md)] distributed file.
+
+Todo
+-----
+
+- Command\Generate\GenerateStagingCommand, takes an yaml file as optional argument (even look for an existing if the argument is not set) and generates a staging for capistrano in interactive mode (optional).
+
+- Make the path of config files (staging, task) configurable using a bundle Extension.
+
+- Handle XML/PHP in GenerateStagingCommand.
 
 License
 =======

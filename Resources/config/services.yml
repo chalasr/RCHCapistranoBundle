@@ -1,6 +1,6 @@
 parameters:
-    rch_capistrano.capitalizer.class: RCH\CapistranoBundle\Util\Capitalizer
-    
+    rch_capistrano.capitalizer.class: RCH\CapistranoBundle\Service\Capitalizer
+
 services:
     rch_capistrano.capitalizer:
         class: "%rch_capistrano.capitalizer.class%"

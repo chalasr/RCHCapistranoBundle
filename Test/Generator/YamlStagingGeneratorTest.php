@@ -12,14 +12,14 @@
 namespace RCH\CapistranoBundle\Test\Generator;
 
 use RCH\CapistranoBundle\Generator\GeneratorInterface;
-use RCH\CapistranoBundle\Generator\StagingGenerator;
+use RCH\CapistranoBundle\Generator\YamlStagingGenerator;
 
 /**
  * Tests the StagingGenerator.
  *
  * @author Robin Chalas <robin.chalas@gmail.com>
  */
-class StagingGeneratorTest extends \PHPUnit_Framework_TestCase
+class YamlStagingGeneratorTest extends \PHPUnit_Framework_TestCase
 {
     /** @var string */
     protected $path;
@@ -40,21 +40,17 @@ class StagingGeneratorTest extends \PHPUnit_Framework_TestCase
 #                                                                         #
 ###########################################################################
 
-server 'rch.fr',
-user: 'chalasr',
-ssh_options: {
-    user: 'chalasr',
-    keys: %w(/home/ssh_user/.ssh/id_rsa),
-    forward_agent: false,
-    auth_methods: %w(publickey password),
-}
-
-set(:deploy_to, '/var/www/html')
+domain: 'rch.fr'
+user: 'chalasr'
+keys: '/home/ssh_user/.ssh/id_rsa'
+forward_agent: 'false'
+auth_methods: 'publickey password'
+deploy_to: '/var/www/html'
 ";
 
     public function setUp()
     {
-        $this->path = sys_get_temp_dir().'/stagings/';
+        $this->path = sys_get_temp_dir().'/yaml_stagings/';
         $this->name = 'test';
         $this->params = array(
             'domain'       => 'rch.fr',
@@ -68,10 +64,10 @@ set(:deploy_to, '/var/www/html')
 
     public function testGenerate()
     {
-        $generator = new StagingGenerator($this->params, $this->path, $this->name);
+        $generator = new YamlStagingGenerator($this->params, $this->path, $this->name);
         $this->generateStaging($generator);
 
-        $this->assertEquals($this->expected, file_get_contents(sprintf('%s%s.rb', $this->path, $this->name)));
+        $this->assertEquals($this->expected, file_get_contents(sprintf('%s%s.yml', $this->path, $this->name)));
     }
 
     private function generateStaging(GeneratorInterface $generator)
@@ -83,7 +79,7 @@ set(:deploy_to, '/var/www/html')
 
     public function tearDown()
     {
-        unlink(sprintf('%s%s.rb', $this->path, $this->name));
+        unlink(sprintf('%s%s.yml', $this->path, $this->name));
         rmdir($this->path);
     }
 }
