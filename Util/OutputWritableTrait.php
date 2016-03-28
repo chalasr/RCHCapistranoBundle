@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Util;
@@ -31,13 +31,13 @@ trait OutputWritableTrait
     {
         $breakline = '';
         $output = $this->createBlockTitle($output);
-        $title = $this->formatAsTitle('Thank\'s to use RCHCapistranoBundle');
+        $title = $this->formatAsTitle('RCHCapistranoBundle - Continuous Deployment');
 
         $welcome = array(
             $breakline,
             $title,
             $breakline,
-            'This bundle makes deployment easier by automating use of <comment>capistrano/symfony</comment>',
+            'This bundle provides continuous deployment for Symfony2+ using <comment>Capistrano</comment>',
             'Created by Robin Chalas - github.com/chalasr',
             $breakline,
         );

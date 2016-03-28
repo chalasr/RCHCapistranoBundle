@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Generator;
@@ -36,7 +36,6 @@ set :pty, true
 set :log_path, fetch(:app_path) + '/logs'
 set :cache_path, fetch(:app_path) + '/cache'
 set :app_config_path, fetch(:app_path) + '/config'
-set :linked_dirs, %w{app/logs}
 set :linked_files, ['app/config/parameters.yml']
 
 # Permissions
@@ -47,6 +46,10 @@ set :webserver_user, 'www-data'
 # Assets
 set :assets_install_path, fetch(:web_path)
 set :assets_install_flags, '--symlink'
+
+# Composer
+set :composer_install_flags, '--no-dev --quiet --no-interaction --optimize-autoloader'
+set :composer_dump_autoload_flags, '--optimize'
 ";
 
     /**
@@ -57,7 +60,6 @@ set :assets_install_flags, '--symlink'
     protected static $configTemplate =
 "# Server
 set :application, '<application>'
-set :repo_url, '<repo_url>'
 set :branch, '<branch>'
 set :model_manager, '<model_manager>'
 set :symfony_env, '<symfony_env>'
@@ -73,20 +75,11 @@ set :keep_releases, <keep_releases>
      * @var string
      */
     protected static $downloadComposerTaskTemplate =
-"namespace :composer do
-    before 'install', 'download'
-    desc 'Composer update'
-    task :download do
-        on roles(:all) do
-            execute 'cd ~/ && curl -s https://getcomposer.org/installer | php'
-        end
-    end
+'namespace :composer do
+    # Download composer
+    before :install, :download_composer
 end
-
-SSHKit.config.command_map[:composer] = 'php ~/composer.phar'
-set :composer_install_flags, '--no-dev --quiet --no-interaction --optimize-autoloader'
-set :composer_dump_autoload_flags, '--optimize'
-";
+';
 
     /**
      * Template of deploy:schemadb.
@@ -94,13 +87,11 @@ set :composer_dump_autoload_flags, '--optimize'
      * @var string
      */
     protected static $updateSchemaTaskTemplate =
-"namespace :deploy do
-    before 'updated', 'schemadb'
-    task :schemadb do
-        invoke 'symfony:console', 'doctrine:schema:update', '--force'
-    end
+'namespace :deploy do
+    # Update database schema
+    before :updated, :schemadb
 end
-";
+';
 
     /**
      * Constructor.

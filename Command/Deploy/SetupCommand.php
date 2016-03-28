@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Command\Deploy;
@@ -14,8 +14,8 @@ namespace RCH\CapistranoBundle\Command\Deploy;
 use RCH\CapistranoBundle\Generator\DeployGenerator;
 use RCH\CapistranoBundle\Generator\StagingGenerator;
 use RCH\CapistranoBundle\Generator\YamlStagingGenerator;
-use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
 use RCH\CapistranoBundle\Util\CanGenerateTrait as CanGenerate;
+use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
 use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -96,7 +96,7 @@ class SetupCommand extends ContainerAwareCommand
      */
     protected function initConfig(Filesystem $fs, $rootDir)
     {
-        $bundleDir = $this->getBundleDir();
+        $bundleDir = $this->getBundleVendorDir();
         $path = $this->getCapistranoDir();
 
         if (!$fs->exists($path.'/deploy.rb') || !$fs->exists($path.'/deploy/production.rb')) {
@@ -135,15 +135,20 @@ class SetupCommand extends ContainerAwareCommand
                 'autocomplete' => [sprintf('git@github.com:chalasr/%s.git', $appName)],
             ),
         );
-        $properties += Yaml::parse(file_get_contents($this->getBundleDir().'/Resources/config/setup_dialog.yml'));
+
+        $properties += Yaml::parse(file_get_contents($this->getBundleVendorDir().'/Resources/config/setup_dialog.yml'));
+
         foreach ($properties as $key => $property) {
             if ('deploy_to' == $key && null !== $data['ssh_user']) {
                 $property['helper'] = "/home/{$data['ssh_user']}/public_html";
             }
+
             $question = new Question("<info>{$property['label']}</info> [<comment>{$property['helper']}</comment>]: ", $property['helper']);
+
             if (isset($property['autocomplete'])) {
                 $question->setAutocompleterValues($property['autocomplete']);
             }
+
             $data[$key] = $questionHelper->ask($input, $output, $question);
         }
 
@@ -231,6 +236,7 @@ class SetupCommand extends ContainerAwareCommand
           'forwardAgent' => false,
           'authMethods'  => 'publickey password',
           'deployTo'     => $deployData['deploy_to'],
+          'repoUrl'      => $deployData['repo_url'],
         ];
 
         $question = new Question("<info>{$serverOptions['domain']['label']}</info> [<comment>{$serverOptions['domain']['helper']}</comment>]: ", $serverOptions['domain']['helper']);

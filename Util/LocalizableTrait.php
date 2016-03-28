@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Util;
@@ -35,9 +35,16 @@ trait LocalizableTrait
      *
      * @return string
      */
-    public function getBundleDir()
+    public function getBundleVendorDir()
     {
-        return $this->getRootDir().'/../vendor/rch/capistrano-bundle/RCH/CapistranoBundle';
+        $psr4Path = $this->getRootDir().'/../vendor/rch/capistrano-bundle';
+        $psr0Path = $psr4Path.'/RCH/CapistranoBundle';
+
+        if (is_dir($psr0Path)) {
+            return $psr0Path;
+        }
+
+        return $psr4Path;
     }
 
     /**
