@@ -34,8 +34,6 @@ Dir.glob('config/tasks/*.rake').each { |r| import r }
 ";
 
     /**
-     * Constructor.
-     *
      * @param array  $parameters
      * @param string $path
      * @param string $name
@@ -57,7 +55,6 @@ Dir.glob('config/tasks/*.rake').each { |r| import r }
             $capfile = sprintf('%s%s%s', $capfile, PHP_EOL, $line);
         }
 
-        // $capfile .= PHP_EOL.PHP_EOL;
         $capfile .= self::$importTemplate;
 
         fwrite($this->file, $this->addHeaders($capfile));

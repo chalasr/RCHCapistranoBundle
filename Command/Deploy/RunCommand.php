@@ -54,7 +54,6 @@ class RunCommand extends ContainerAwareCommand
         $rootDir = $this->getRootDir();
         $stagingName = $input->getOption('staging-name');
         $stagingPath = $this->getCapistranoDir().'/deploy/';
-        $capitalizer = $this->getContainer()->get('rch_capistrano.capitalizer');
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
 
         $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);

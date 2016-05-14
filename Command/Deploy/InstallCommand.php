@@ -47,7 +47,6 @@ class InstallCommand extends ContainerAwareCommand
     {
         $rootDir = $this->getRootDir();
         $bundleConfigDir = $this->getPublishedConfigDir();
-        $capistranoDir = $this->getCapistranoDir();
         $fs = new Filesystem();
 
         $this->sayWelcome($output);
