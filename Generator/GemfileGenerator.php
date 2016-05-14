@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Generator;
@@ -23,7 +23,10 @@ class GemfileGenerator extends AbstractGenerator
      */
     protected static $template = 'gem <gem>';
 
-    private static $sourceTemplate = PHP_EOL."source 'https://rubygems.org'";
+    private static $sourceTemplate = "
+
+source 'https://rubygems.org'
+";
 
     /**
      * Constructor.
@@ -49,16 +52,8 @@ class GemfileGenerator extends AbstractGenerator
             $gemfile = sprintf('%s%s%s', $gemfile, PHP_EOL, $line);
         }
 
-        $this->addSource($gemfile);
+        $gemfile .= self::$sourceTemplate;
 
         fwrite($this->file, $this->addHeaders($gemfile));
-    }
-
-    /**
-     * Writes the gems source.
-     */
-    private function addSource(&$gemfile)
-    {
-        $gemfile = sprintf('%s%s%s',  $gemfile, PHP_EOL, self::$sourceTemplate);
     }
 }

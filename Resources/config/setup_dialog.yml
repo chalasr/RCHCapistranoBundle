@@ -3,8 +3,8 @@ branch:
   label: 'Git branch'
 
 ssh_user:
-  helper: 'chalasr'
-  label: SSH username
+  helper: ''
+  label: SSH Username
 
 deploy_to:
   helper: ~
@@ -21,10 +21,12 @@ symfony_env:
 use_sudo:
   helper: 'false'
   label: 'Use sudo'
+  autocomplete: ['true', 'false']
 
 use_set_permissions:
   helper: 'true'
   label: 'Set permissions'
+  autocomplete: ['true', 'false']
 
 permission_method:
   helper: ':chmod'

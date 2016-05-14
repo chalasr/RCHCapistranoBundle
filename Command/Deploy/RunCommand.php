@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Command\Deploy;
@@ -16,6 +16,7 @@ use RCH\CapistranoBundle\Util\CanGenerateTrait as CanGenerate;
 use RCH\CapistranoBundle\Util\LocalizableTrait as Localizable;
 use RCH\CapistranoBundle\Util\OutputWritableTrait as OutputWritable;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,20 +54,19 @@ class RunCommand extends ContainerAwareCommand
         $rootDir = $this->getRootDir();
         $stagingName = $input->getOption('staging-name');
         $stagingPath = $this->getCapistranoDir().'/deploy/';
-        $capitalizer = $this->getContainer()->get('rch_capistrano.capitalizer');
         $staging = sprintf('%s%s.rb', $stagingPath, $stagingName);
 
         $output->setVerbosity(OutputInterface::VERBOSITY_VERBOSE);
         $this->sayWelcome($output);
 
         if (false === file_exists($staging)) {
-            $nonReadyStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
+            $yamlStaging = sprintf('%s/config/rch/staging/%s.yml', $rootDir, $stagingName);
 
-            if (false === file_exists($nonReadyStaging)) {
+            if (false === file_exists($yamlStaging)) {
                 throw new InvalidArgumentException(sprintf('Unable to find staging with name %s', $stagingName));
             }
 
-            $params = $this->parseYamlStaging($nonReadyStaging);
+            $params = $this->parseYamlStaging($yamlStaging);
             $generator = new StagingGenerator($params, $stagingPath, $stagingName);
 
             $this->generate($generator);

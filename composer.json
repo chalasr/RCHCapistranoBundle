@@ -1,6 +1,6 @@
 {
     "name": "rch/capistrano-bundle",
-    "description": "Symfony/console command that provide automation of your deployment workflow on top of Capistrano.",
+    "description": "Continuous deployment for Symfony2+",
     "keywords": ["deploy", "bundle", "symfony2", "capistrano", "capifony", "production", "workflow"],
     "type": "symfony-bundle",
     "license": "GPL-3.0",

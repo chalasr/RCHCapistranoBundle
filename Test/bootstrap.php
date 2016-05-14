@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the RCH package.
+ * This file is part of the RCHCapistranoBundle.
  *
  * (c) Robin Chalas <robin.chalas@gmail.com>
  *

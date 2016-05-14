@@ -1,12 +1,12 @@
 <?php
 
-/**
- * This file is part of RCH/CapistranoBundle.
+/*
+ * This file is part of the RCHCapistranoBundle.
  *
- * Robin Chalas <robin.chalas@gmail.com>
+ * (c) Robin Chalas <robin.chalas@gmail.com>
  *
- * For more informations about license, please see the LICENSE
- * file distributed in this source code.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 namespace RCH\CapistranoBundle\Command\Deploy;
@@ -47,7 +47,6 @@ class InstallCommand extends ContainerAwareCommand
     {
         $rootDir = $this->getRootDir();
         $bundleConfigDir = $this->getPublishedConfigDir();
-        $capistranoDir = $this->getCapistranoDir();
         $fs = new Filesystem();
 
         $this->sayWelcome($output);
@@ -58,10 +57,6 @@ class InstallCommand extends ContainerAwareCommand
                 $bundleConfigDir.'/task',
                 $bundleConfigDir.'/staging',
             ));
-        }
-
-        if (true === $fs->exists($capistranoDir)) {
-            $fs->remove($capistranoDir);
         }
 
         $output->writeln(['', ' > generating <comment>./Capfile</comment>', ' > generating <comment>./Gemfile</comment>', '']);
